@@ -1,10 +1,11 @@
+import AuthFrom from '@/components/AuthFrom'
 import React from 'react'
 
 const SignIn = () => {
   return (
-    <div>
-      Sign In
-    </div>
+    <section  className='flex-center size-full max-sm:px-6'>
+      <AuthFrom type='sign-in'/>
+    </section>
   )
 }
 

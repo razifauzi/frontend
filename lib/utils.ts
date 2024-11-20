@@ -2,6 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -193,3 +194,35 @@ export const getTransactionStatus = (date: Date) => {
 
   return date > twoDaysAgo ? "Processing" : "Success";
 };
+
+
+export const authFormSchema = (type:string) =>  z.object({
+  //sign-up
+  firstName: type === 'sign-in' ? z.string().optional() : z.string()
+    .min(3, "firstName must be at least 3 characters long"),
+  lastName: type === 'sign-in' ? z.string().optional() : z.string()
+  .min(3, "lastName must be at least 3 characters long"),
+  address1: type === 'sign-in' ? z.string().optional() : z.string()
+  .min(3, "address1 must be at least 3 characters long"),
+  state: type === 'sign-in' ? z.string().optional() : z.string()
+  .min(3, "state must be at least 3 characters long"),
+  postalCode: type === 'sign-in' ? z.string().optional() : z.string()
+  .min(3, "postalCode must be at least 3 characters long"),
+  dob: type === 'sign-in' ? z.string().optional() : z.string()
+  .min(3, "dob must be at least 3 characters long"),
+  ssn: type === 'sign-in' ? z.string().optional() : z.string()
+  .min(3, "ssn must be at least 3 characters long"),
+  //sign-in
+  username: z.string()
+    .min(3, "Username must be at least 3 characters long")
+    .max(20, "Username must be at most 20 characters long")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
+  email: z.string().email("Invalid email address"),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters long")
+    .max(100, "Password must be at most 100 characters long")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one digit")
+    .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
+});
