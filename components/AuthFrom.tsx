@@ -13,7 +13,7 @@ import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { signIn, signUp } from '@/lib/actions/user.actions'
+import {  signIn, signUp } from '@/lib/actions/user.actions'
 
 
 const AuthFrom = ({type}:{type:string}) => {
@@ -140,27 +140,49 @@ const formSchema = authFormSchema(type)
                       placeholder='Example: 1234'
                     />
                   </div>
+                  {/* <CustomInput
+                    control={form.control}
+                    name='username'
+                    label='Username'
+                    placeholder='Enter your username'
+                  /> */}
+                  <CustomInput
+                    control={form.control}
+                    name='email'
+                    label='Email'
+                    placeholder='Enter your email'
+                  />
+                  <CustomInput
+                    control={form.control}
+                    name='password'
+                    label='Password'
+                    placeholder='Enter your password'
+                  />
                 </>
               )}
-              <CustomInput
-                control={form.control}
-                name='username'
-                label='Username'
-                placeholder='Enter your username'
-              />
-              <CustomInput
-                control={form.control}
-                name='email'
-                label='Email'
-                placeholder='Enter your email'
-              />
-              <CustomInput
-                control={form.control}
-                name='password'
-                label='Password'
-                placeholder='Enter your password'
-              />
-              <div className="flex flex-col gap-4">
+              {type === 'sign-in' && (
+                <>
+                  {/* <CustomInput
+                    control={form.control}
+                    name='username'
+                    label='Username'
+                    placeholder='Enter your username'
+                  /> */}
+                  <CustomInput
+                    control={form.control}
+                    name='email'
+                    label='Email'
+                    placeholder='Enter your email'
+                  />
+                  <CustomInput
+                    control={form.control}
+                    name='password'
+                    label='Password'
+                    placeholder='Enter your password'
+                  />
+                </>
+               )}
+               <div className="flex flex-col gap-4">
                 <Button type="submit" className='form-btn' disabled={isLoading}>
                   {isLoading ? (
                     <>
