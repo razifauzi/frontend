@@ -33,7 +33,20 @@ const formSchema = authFormSchema(type)
     setIsLoading(true)
     try{
       if(type === 'sign-up'){
-        const newUser = await signUp(data)
+        const userData = {
+          firsName: data.firstName!,
+          lastName: data.lastName!,
+          address1: data.address1!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dob!,
+          ssn: data.ssn!,
+          email: data.email,
+          password: data.password
+        }
+
+
+        const newUser = await signUp(userData)
         setUser(newUser)
       }
       if(type === 'sign-in'){
