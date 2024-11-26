@@ -1,4 +1,5 @@
 import HeaderBox from '@/components/HeaderBox'
+import RecentTransactions from '@/components/RecentTransactions'
 import TotalBalance from '@/components/TotalBalance'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 import React from 'react'
@@ -21,6 +22,7 @@ const Home = async () => {
               totalCurrentBalance={120.35}
             />
           </header>
+          <RecentTransactions/>
         </div>
     </section>
 
