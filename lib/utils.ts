@@ -196,6 +196,19 @@ export const getTransactionStatus = (date: Date) => {
 };
 
 
+export const incomeFormSchema = (type:string) =>  z.object({
+  name: type === 'income-form' ? z.string().optional() : z.string()
+    .min(3, "name must be at least 3 characters long"),
+  frequency: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "frequency must be at least 3 characters long"),
+  description: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "description must be at least 3 characters long"),
+  amount: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "amount must be at least 3 characters long"),
+  program: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "program must be at least 3 characters long"),
+});
+
 export const authFormSchema = (type:string) =>  z.object({
   //sign-up
   firstName: type === 'sign-in' ? z.string().optional() : z.string()
@@ -208,7 +221,7 @@ export const authFormSchema = (type:string) =>  z.object({
   .min(3, "state must be at least 3 characters long"),
   postalCode: type === 'sign-in' ? z.string().optional() : z.string()
   .min(3, "postalCode must be at least 3 characters long"),
-  dob: type === 'sign-in' ? z.string().optional() : z.string()
+  dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string()
   .min(3, "dob must be at least 3 characters long"),
   ssn: type === 'sign-in' ? z.string().optional() : z.string()
   .min(3, "ssn must be at least 3 characters long"),

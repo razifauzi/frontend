@@ -17,14 +17,14 @@ export const signIn = async ({email,password}:signInProps) => {
 
 }
 
-export const signUp = async ({password,...userData}:SignUpParams) => {
-    const {email,firstName,lastName} = userData
-    let newUserAccount;
+export const signUp = async (userData:SignUpParams) => {
+    const {email,password,firstName,lastName} = userData
+    // let newUserAccount;
 
     try{
         const { account } = await createAdminClient();
 
-        newUserAccount = await account.create(ID.unique(), email, password, `${firstName}${lastName}`);
+        const newUserAccount = await account.create(ID.unique(), email, password, `${firstName}${lastName}`);
         if(!newUserAccount) throw new Error ('Error Creating user')
         const session = await account.createEmailPasswordSession(email, password);
 

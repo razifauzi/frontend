@@ -26,6 +26,8 @@ const formSchema = authFormSchema(type)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      email:"",
+      password:''
     },
   })
   
@@ -33,20 +35,7 @@ const formSchema = authFormSchema(type)
     setIsLoading(true)
     try{
       if(type === 'sign-up'){
-        const userData = {
-          firsName: data.firstName!,
-          lastName: data.lastName!,
-          address1: data.address1!,
-          state: data.state!,
-          postalCode: data.postalCode!,
-          dateOfBirth: data.dob!,
-          ssn: data.ssn!,
-          email: data.email,
-          password: data.password
-        }
-
-
-        const newUser = await signUp(userData)
+        const newUser = await signUp(data)
         setUser(newUser)
       }
       if(type === 'sign-in'){
@@ -142,7 +131,7 @@ const formSchema = authFormSchema(type)
                   <div className="flex gap-4">
                     <CustomInput
                       control={form.control}
-                      name='dob'
+                      name='dateOfBirth'
                       label='Date of Birth'
                       placeholder='YYYY-MM-DD'
                     />
@@ -153,12 +142,6 @@ const formSchema = authFormSchema(type)
                       placeholder='Example: 1234'
                     />
                   </div>
-                  {/* <CustomInput
-                    control={form.control}
-                    name='username'
-                    label='Username'
-                    placeholder='Enter your username'
-                  /> */}
                   <CustomInput
                     control={form.control}
                     name='email'
@@ -175,12 +158,6 @@ const formSchema = authFormSchema(type)
               )}
               {type === 'sign-in' && (
                 <>
-                  {/* <CustomInput
-                    control={form.control}
-                    name='username'
-                    label='Username'
-                    placeholder='Enter your username'
-                  /> */}
                   <CustomInput
                     control={form.control}
                     name='email'
