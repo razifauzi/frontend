@@ -44,51 +44,9 @@ const badgeStyles: Record<string, string> = {
     // Add more statuses dynamically here
   };
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    damn: "damascus",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "succes",
-    damn: "damascus",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    damn: "damascus",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    damn: "damascus",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    damn: "damascus",
-    email: "carmella@hotmail.com",
-  },
-]
+import { fetchPayments,Payment } from '@/lib/spring-boot/api'
+import { useEffect, useState } from "react"
 
-export type Payment = {
-  id: string
-  amount: number
-  status: string
-  damn: string
-  email: string
-}
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -196,6 +154,7 @@ export const columns: ColumnDef<Payment>[] = [
 ]
 
 export function DataTableDemo() {
+  const [data, setData] = useState<Payment[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -222,6 +181,19 @@ export function DataTableDemo() {
       rowSelection,
     },
   })
+
+  useEffect(() => {
+    async function loadPayments() {
+      try {
+        const payments = await fetchPayments();
+        setData(payments);
+      } catch (error) {
+        console.error("Error fetching payments:", error)
+      }
+    }
+
+    loadPayments()
+  }, [])
 
   return (
     <div className="w-full">
