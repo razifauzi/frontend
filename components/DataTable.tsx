@@ -13,6 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import IncomeForm from '@/components/IncomeForm'
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import {
   Dialog,
@@ -219,34 +220,15 @@ export function DataTableDemo() {
             <DialogTrigger asChild>
               <Button variant="outline">Add Payment</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[1000px]" >
+            <DialogContent className="sm:max-w-[800px]" >
               <DialogHeader>
                 <DialogTitle>Edit profile</DialogTitle>
                 <DialogDescription>
                   Make changes to your profile here. Click save when you're done.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-left">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    defaultValue="Pedro Duarte"
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="username" className="text-left">
-                    Username
-                  </Label>
-                  <Input
-                    id="username"
-                    defaultValue="@peduarte"
-                    className="col-span-3"
-                  />
-                </div>
+              <div className="flex-center size-full max-sm:px-6">
+                <IncomeForm type='income-form'/>
               </div>
               <DialogFooter>
                 <Button type="submit">Save changes</Button>
