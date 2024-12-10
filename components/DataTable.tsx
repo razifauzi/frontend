@@ -275,7 +275,7 @@ export function DataTableDemo({type}:{type:string}) {
             <DialogTrigger asChild>
               <Button variant="outline">Add Program</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[1000px]" >
+            <DialogContent className="sm:max-w-[800px]" >
               <DialogHeader>
                 <DialogTitle>Edit profile</DialogTitle>
                 <DialogDescription>
