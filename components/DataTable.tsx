@@ -13,6 +13,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import CustomInput from './CustomInputIncome'
+import { incomeFormSchema } from '@/lib/utils'
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import {Form} from "@/components/ui/form"
+import { useForm } from "react-hook-form"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import {
   Dialog,
@@ -53,11 +59,11 @@ const badgeStyles: Record<string, string> = {
     // Add more statuses dynamically here
   };
 
-import { fetchPayments,Payment } from '@/lib/spring-boot/api'
+import { fetchIncomes,Income } from '@/lib/spring-boot/api'
 import { useEffect, useState } from "react"
+import { useRouter } from 'next/navigation'
 
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Income>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -79,42 +85,50 @@ export const columns: ColumnDef<Payment>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  },
+  },  
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-        const status = row.getValue("status") as string;
-        const style = badgeStyles[status] || "bg-gray-100 text-gray-800"; // Default style
-  
-        return (
-          <Badge className={`capitalize ${style}`}>
-            {status}
-          </Badge>
-        );
-      }
-  },
-  {
-    accessorKey: "damn",
-    header: "Damn",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("damn")}</div>
-    ),
-  },
-  {
-    accessorKey: "email",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Name
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase text-left">{row.getValue("name")}</div>,
+  },
+  {
+    accessorKey: "program",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Program
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase text-left">{row.getValue("program")}</div>,
+  },
+  {
+    accessorKey: "frequency",
+    header: "Frequency",
+    cell: ({ row }) => {
+        const frequency = row.getValue("frequency") as string;
+        const style = badgeStyles[frequency] || "bg-gray-100 text-gray-800"; // Default style
+  
+        return (
+          <Badge className={`capitalize ${style}`}>
+            {frequency}
+          </Badge>
+        );
+      }
   },
   {
     accessorKey: "amount",
@@ -130,6 +144,13 @@ export const columns: ColumnDef<Payment>[] = [
 
       return <div className="font-semibold text-[#f00438] text-center ">{formatted}</div>
     },
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("description")}</div>
+    ),
   },
   {
     id: "actions",
@@ -150,7 +171,7 @@ export const columns: ColumnDef<Payment>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy payment ID
+              Copy program ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>
@@ -162,8 +183,8 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ]
 
-export function DataTableDemo() {
-  const [data, setData] = useState<Payment[]>([]);
+export function DataTableDemo({type}:{type:string}) {
+  const [data, setData] = useState<Income[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -190,72 +211,129 @@ export function DataTableDemo() {
       rowSelection,
     },
   })
+  const formSchema = incomeFormSchema(type)
+  const router = useRouter()
+  const [isLoading,setIsLoading] = useState(false)
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+    },
+  })
 
   useEffect(() => {
-    async function loadPayments() {
+    async function loadIncomes() {
       try {
-        const payments = await fetchPayments();
-        setData(payments);
+        const incomes = await fetchIncomes();
+        setData(incomes);
       } catch (error) {
-        console.error("Error fetching payments:", error)
+        console.error("Error fetching incomes:", error)
       }
     }
 
-    loadPayments()
+    loadIncomes()
   }, [])
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setIsLoading(true)
+    try{
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/income`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }); 
+    
+      if (!response.ok) {
+        throw new Error('Failed to submit income data');
+      }
+    
+      const result = await response.json();
+      console.log('Income successfully saved:', result);
+    
+      router.push('/');
+    }catch (error){
+       console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter program..."
+          value={(table.getColumn("program")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("program")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
            <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline">Add Payment</Button>
+              <Button variant="outline">Add Program</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[1000px]" >
               <DialogHeader>
                 <DialogTitle>Edit profile</DialogTitle>
                 <DialogDescription>
-                  Make changes to your profile here. Click save when you're done.
+                  Make changes to your profile here.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-left">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    defaultValue="Pedro Duarte"
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="username" className="text-left">
-                    Username
-                  </Label>
-                  <Input
-                    id="username"
-                    defaultValue="@peduarte"
-                    className="col-span-3"
-                  />
-                </div>
+                
+              
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" >
+                <>
+                  <div className="flex gap-4">
+                    <CustomInput
+                      control={form.control}
+                      name='name'
+                      label='Name'
+                      placeholder='Enter your name'
+                    />
+                    <CustomInput
+                      control={form.control}
+                      name='frequency'
+                      label='Frequency'
+                      placeholder='Enter your frequency'
+                    />
+                  </div>
+                  <div className="flex gap-4">
+                    <CustomInput
+                      control={form.control}
+                      name='amount'
+                      label='Amount'
+                      placeholder='Example: 123'
+                    />
+                    <CustomInput
+                      control={form.control}
+                      name='program'
+                      label='Program'
+                      placeholder='Example: Program'
+                    />
+                  </div>
+                  <CustomInput
+                      control={form.control}
+                      name='description'
+                      label='Description'
+                      placeholder='Enter your Specific description'
+                    />
+                    </>
+                   </form>
+                  </Form>
               </div>
               <DialogFooter>
-                <Button type="submit">Save changes</Button>
+                <Button variant="outline" size="sm" type="submit">Save changes</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="destructive" className="ml-auto">
               Columns <ChevronDown />
             </Button>
           </DropdownMenuTrigger>

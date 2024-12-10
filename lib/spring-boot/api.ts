@@ -6,12 +6,13 @@ export interface User {
   email: string;
 }
 
-export interface Payment {
+export interface Income {
   id: string;
+  name: number;
   amount: number;
-  status: string;
-  damn: string;
-  email: string;
+  description: string;
+  frequency: string;
+  program: string;
 }
 
 
@@ -61,34 +62,34 @@ export const deleteUser = async (id: string): Promise<void> => {
 };
 
 // Fetch all payments
-export const fetchPayments = async (): Promise<Payment[]> => {
-  return fetchData<Payment[]>("/api/v1/payments");
+export const fetchIncomes= async (): Promise<Income[]> => {
+  return fetchData<Income[]>("/api/v1/income");
 };
 
 // Fetch a single payment by ID
-export const fetchPaymentById = async (id: string): Promise<Payment> => {
-  return fetchData<Payment>(`/api/v1/payments/${id}`);
+export const fetchIncomeById = async (id: string): Promise<Income> => {
+  return fetchData<Income>(`/api/v1/income/${id}`);
 };
 
 // Create a new payment
-export const createPayment = async (payment: Payment): Promise<Payment> => {
-  return fetchData<Payment>("/api/v1/payments", {
+export const createIncome= async (income: Income): Promise<Income> => {
+  return fetchData<Income>("/api/v1/income", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payment),
+    body: JSON.stringify(income),
   });
 };
 
 // Update a payment
-export const updatePayment = async (id: string, payment: Payment): Promise<Payment> => {
-  return fetchData<Payment>(`/api/v1/payments/${id}`, {
+export const updateIncome= async (id: string, income: Income): Promise<Income> => {
+  return fetchData<Income>(`/api/v1/income/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payment),
+    body: JSON.stringify(income),
   });
 };
 
 // Delete a payment
-export const deletePayment = async (id: string): Promise<void> => {
-  await fetchData<void>(`/api/v1/payments/${id}`, { method: "DELETE" });
+export const deleteIncome = async (id: string): Promise<void> => {
+  await fetchData<void>(`/api/v1/income/${id}`, { method: "DELETE" });
 };
