@@ -8,11 +8,12 @@ export interface User {
 
 export interface Income {
   id: string;
-  name: number;
+  name: string;
   amount: number;
   description: string;
   frequency: string;
   program: string;
+  fileName: string,
 }
 
 
@@ -28,50 +29,17 @@ export const fetchData = async <T>(endpoint: string, options: RequestInit = {}):
 };
 
 
-// Fetch all users
-export const fetchUsers = async (): Promise<User[]> => {
-  return fetchData<User[]>("/api/v1/users");
-};
-
-// Fetch a single user by ID
-export const fetchUserById = async (id: string): Promise<User> => {
-  return fetchData<User>(`/api/v1/users/${id}`);
-};
-
-// Create a new user
-export const createUser = async (user: User): Promise<User> => {
-  return fetchData<User>("/api/v1/users", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
-  });
-};
-
-// Update a user
-export const updateUser = async (id: string, user: User): Promise<User> => {
-  return fetchData<User>(`/api/v1/users/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
-  });
-};
-
-// Delete a user
-export const deleteUser = async (id: string): Promise<void> => {
-  await fetchData<void>(`/api/v1/users/${id}`, { method: "DELETE" });
-};
-
-// Fetch all payments
+// Fetch all income
 export const fetchIncomes= async (): Promise<Income[]> => {
   return fetchData<Income[]>("/api/v1/income");
 };
 
-// Fetch a single payment by ID
+// Fetch a single income by ID
 export const fetchIncomeById = async (id: string): Promise<Income> => {
   return fetchData<Income>(`/api/v1/income/${id}`);
 };
 
-// Create a new payment
+// Create a new income
 export const createIncome= async (income: Income): Promise<Income> => {
   return fetchData<Income>("/api/v1/income", {
     method: "POST",
@@ -80,7 +48,7 @@ export const createIncome= async (income: Income): Promise<Income> => {
   });
 };
 
-// Update a payment
+// Update a income
 export const updateIncome= async (id: string, income: Income): Promise<Income> => {
   return fetchData<Income>(`/api/v1/income/${id}`, {
     method: "PUT",
@@ -89,7 +57,7 @@ export const updateIncome= async (id: string, income: Income): Promise<Income> =
   });
 };
 
-// Delete a payment
+// Delete a income
 export const deleteIncome = async (id: string): Promise<void> => {
   await fetchData<void>(`/api/v1/income/${id}`, { method: "DELETE" });
 };

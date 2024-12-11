@@ -29,7 +29,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -59,7 +58,7 @@ const badgeStyles: Record<string, string> = {
     // Add more statuses dynamically here
   };
 
-import { fetchIncomes,Income } from '@/lib/spring-boot/api'
+import { createIncome, fetchIncomes,Income,updateIncome} from '@/lib/spring-boot/api'
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation'
 
@@ -152,47 +151,49 @@ export const columns: ColumnDef<Income>[] = [
       <div className="capitalize">{row.getValue("description")}</div>
     ),
   },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
+  // {
+  //   id: "actions",
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     const income = row.original
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy program ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <MoreHorizontal />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //           <DropdownMenuItem
+  //             onClick={() => navigator.clipboard.writeText(income.id)}
+  //           >
+  //             Copy program ID
+  //           </DropdownMenuItem>
+  //           <DropdownMenuSeparator />
+  //           <DropdownMenuItem onClick={() => handleEditIncome(income)}>
+  //             View Income details
+  //           </DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     )
+  //   },
+  // },
 ]
 
 export function DataTableDemo({type}:{type:string}) {
   const [data, setData] = useState<Income[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-
+  const [selectedIncome, setSelectedIncome] = useState<Income | null>(null); 
+  const formSchema = incomeFormSchema(type)
+  const router = useRouter()
+  const [isLoading,setIsLoading] = useState(false)
+  
   const table = useReactTable({
     data,
     columns,
@@ -211,14 +212,11 @@ export function DataTableDemo({type}:{type:string}) {
       rowSelection,
     },
   })
-  const formSchema = incomeFormSchema(type)
-  const router = useRouter()
-  const [isLoading,setIsLoading] = useState(false)
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-    },
+    defaultValues: {},
   })
 
   useEffect(() => {
@@ -234,29 +232,40 @@ export function DataTableDemo({type}:{type:string}) {
     loadIncomes()
   }, [])
 
+  const handleEditIncome = (income: Income) => {
+    setSelectedIncome(income);
+    form.reset(income); // Pre-fill the form with income data
+  };
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     try{
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/income`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }); 
-    
-      if (!response.ok) {
-        throw new Error('Failed to submit income data');
+      const incomeData: Income = {
+        id: selectedIncome?.id || "", // If editing, keep the current id, else an empty string for a new income.
+        name: data.name ?? "",
+        amount: parseFloat(data.amount ?? "0"),
+        description: data.description ?? "",
+        frequency: data.frequency ?? "",
+        program: data.program ?? "",
+        fileName: data.fileName ?? "",
+      };
+
+      if (selectedIncome) {
+        // Updating the existing income
+        await updateIncome(selectedIncome.id, incomeData);
+      } else {
+        // Creating a new income
+        await createIncome(incomeData);
       }
-    
-      const result = await response.json();
-      console.log('Income successfully saved:', result);
-    
-      router.push('/');
-    }catch (error){
-       console.log(error)
+
+      const updatedIncomes = await fetchIncomes();
+      setData(updatedIncomes); // Refresh the data after creating or updating
+      router.push("/"); // Redirect after the operation
+    } catch (error) {
+      console.log(error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
+      setSelectedIncome(null); // Clear the selected income after submit
     }
   }
 
@@ -277,17 +286,15 @@ export function DataTableDemo({type}:{type:string}) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[800px]" >
               <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here.
-                </DialogDescription>
+              <DialogTitle>{selectedIncome ? "Edit Income" : "Add New Income"}</DialogTitle>
+              <DialogDescription>Make changes to your income here.</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 
               
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" >
-                <>
+                
                   <div className="flex gap-4">
                     <CustomInput
                       control={form.control}
@@ -318,17 +325,24 @@ export function DataTableDemo({type}:{type:string}) {
                   </div>
                   <CustomInput
                       control={form.control}
+                      name='fileName'
+                      label='Filename'
+                      placeholder='Enter your Specific filename'
+                    />
+                  <CustomInput
+                      control={form.control}
                       name='description'
                       label='Description'
                       placeholder='Enter your Specific description'
                     />
-                    </>
+                <DialogFooter>
+                <Button variant="outline" size="sm" type="submit"disabled={isLoading}>
+                {isLoading ? "Submitting..." : "Save Income"}</Button>
+              </DialogFooter>
                    </form>
                   </Form>
               </div>
-              <DialogFooter>
-                <Button variant="outline" size="sm" type="submit">Save changes</Button>
-              </DialogFooter>
+              
             </DialogContent>
           </Dialog>
         <DropdownMenu>
@@ -393,6 +407,29 @@ export function DataTableDemo({type}:{type:string}) {
                       )}
                     </TableCell>
                   ))}
+
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() => navigator.clipboard.writeText(row.original.id)}
+                      >
+                        Copy program ID
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => handleEditIncome(row.original)}>
+                        View Income details
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
                 </TableRow>
               ))
             ) : (

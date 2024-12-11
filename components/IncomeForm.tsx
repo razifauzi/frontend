@@ -13,6 +13,7 @@ import CustomInput from './CustomInputIncome'
 import { incomeFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import axios from 'axios';
 
 
 const IncomeForm = ({type}:{type:string}) => {
@@ -21,35 +22,44 @@ const router = useRouter()
 const [user,setUser] = useState(null)
 const [isLoading,setIsLoading] = useState(false)
 const formSchema = incomeFormSchema(type)
+const [error, setError] = useState<string | null>(null) 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: '',
+      frequency: '',
+      amount: '',
+      program: '',
+      description: '',
+      fileName: '',
     },
   })
   
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
-    try{
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/income`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+    setError(null) 
+    console.log('Form data:', data)
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/income', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
       });
-    
+      console.log(response)
       if (!response.ok) {
-        throw new Error('Failed to submit income data');
+          const errorData = await response.json();
+          console.error('Error response from API:', errorData);
+          throw new Error(errorData.message || 'Request failed');
       }
-    
+  
       const result = await response.json();
       console.log('Income successfully saved:', result);
-    
-      router.push('/');
-    }catch (error){
-       console.log(error)
-    } finally {
+  } catch (error) {
+      console.error('Request failed:', error);
+  } finally {
       setIsLoading(false)
     }
   }
@@ -111,6 +121,12 @@ const formSchema = incomeFormSchema(type)
                       label='Description'
                       placeholder='Enter your Specific description'
                     />
+                  <CustomInput
+                      control={form.control}
+                      name='fileName'
+                      label='Filename'
+                      placeholder='Enter your Specific filename'
+                    />
                   
                 </>
                <div className="flex flex-col gap-4">
@@ -122,6 +138,7 @@ const formSchema = incomeFormSchema(type)
           </Form>
         </>
       )}
+      {error && <div className="text-red-500 text-center mt-4">{error}</div>}
    </section>
   )
 }

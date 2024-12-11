@@ -207,6 +207,8 @@ export const incomeFormSchema = (type:string) =>  z.object({
   .min(3, "amount must be at least 3 characters long"),
   program: type === 'income-form' ? z.string().optional() : z.string()
   .min(3, "program must be at least 3 characters long"),
+  fileName: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "program must be at least 3 characters long"),
 });
 
 export const authFormSchema = (type:string) =>  z.object({
