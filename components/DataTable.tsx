@@ -58,7 +58,7 @@ const badgeStyles: Record<string, string> = {
     // Add more statuses dynamically here
   };
 
-import { createIncome, fetchIncomes,Income,updateIncome} from '@/lib/spring-boot/api'
+import { createIncome, fetchIncomes,Income,updateIncome,fetchIncomeById} from '@/lib/spring-boot/api'
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation'
 
@@ -173,7 +173,14 @@ export const columns: ColumnDef<Income>[] = [
   //             Copy program ID
   //           </DropdownMenuItem>
   //           <DropdownMenuSeparator />
-  //           <DropdownMenuItem onClick={() => handleEditIncome(income)}>
+  //           <DropdownMenuItem onClick={async () => {
+  //               try {
+  //                 const incomeDetail = await fetchIncomeById(income.id);
+  //                 setSelectedIncome(incomeDetail); // Set the income details into the state
+  //               } catch (error) {
+  //                 console.error("Error fetching income details:", error);
+  //               }
+  //             }}>
   //             View Income details
   //           </DropdownMenuItem>
   //         </DropdownMenuContent>
@@ -232,10 +239,18 @@ export function DataTableDemo({type}:{type:string}) {
     loadIncomes()
   }, [])
 
-  const handleEditIncome = (income: Income) => {
-    setSelectedIncome(income);
-    form.reset(income); // Pre-fill the form with income data
-  };
+  useEffect(() => {
+    if (selectedIncome) {
+      form.reset({
+        name: selectedIncome.name,
+        frequency: selectedIncome.frequency,
+        amount: selectedIncome.amount.toString(), // convert to string as it's used as a text input
+        program: selectedIncome.program,
+        fileName: selectedIncome.fileName,
+        description: selectedIncome.description,
+      });
+    }
+  }, [selectedIncome, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
@@ -407,29 +422,37 @@ export function DataTableDemo({type}:{type:string}) {
                       )}
                     </TableCell>
                   ))}
-
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem
-                        onClick={() => navigator.clipboard.writeText(row.original.id)}
-                      >
-                        Copy program ID
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handleEditIncome(row.original)}>
-                        View Income details
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+                   <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            onClick={() => navigator.clipboard.writeText(row.original.id)} // Access the income ID from row.original
+                          >
+                            Copy program ID
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={async () => {
+                              try {
+                                const incomeDetail = await fetchIncomeById(row.original.id); // Access the income ID from row.original
+                                setSelectedIncome(incomeDetail); // Set the income details into the state
+                              } catch (error) {
+                                console.error("Error fetching income details:", error);
+                              }
+                            }}
+                          >
+                            View Income details
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
                 </TableRow>
               ))
             ) : (
