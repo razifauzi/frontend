@@ -58,7 +58,7 @@ const badgeStyles: Record<string, string> = {
     // Add more statuses dynamically here
   };
 
-import { createIncome, fetchIncomes,Income,updateIncome,fetchIncomeById} from '@/lib/spring-boot/api'
+import { createIncome, fetchIncomes,Income,updateIncome} from '@/lib/spring-boot/api'
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation'
 
@@ -151,43 +151,6 @@ export const columns: ColumnDef<Income>[] = [
       <div className="capitalize">{row.getValue("description")}</div>
     ),
   },
-  // {
-  //   id: "actions",
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     const income = row.original
-
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //           <DropdownMenuItem
-  //             onClick={() => navigator.clipboard.writeText(income.id)}
-  //           >
-  //             Copy program ID
-  //           </DropdownMenuItem>
-  //           <DropdownMenuSeparator />
-  //           <DropdownMenuItem onClick={async () => {
-  //               try {
-  //                 const incomeDetail = await fetchIncomeById(income.id);
-  //                 setSelectedIncome(incomeDetail); // Set the income details into the state
-  //               } catch (error) {
-  //                 console.error("Error fetching income details:", error);
-  //               }
-  //             }}>
-  //             View Income details
-  //           </DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     )
-  //   },
-  // },
 ]
 
 export function DataTableDemo({type}:{type:string}) {
@@ -258,7 +221,8 @@ export function DataTableDemo({type}:{type:string}) {
       const incomeData: Income = {
         id: selectedIncome?.id || "", // If editing, keep the current id, else an empty string for a new income.
         name: data.name ?? "",
-        amount: parseFloat(data.amount ?? "0"),
+        amount: data.amount ?? "",
+        // amount: parseFloat(data.amount ?? "0"),
         description: data.description ?? "",
         frequency: data.frequency ?? "",
         program: data.program ?? "",
@@ -439,14 +403,7 @@ export function DataTableDemo({type}:{type:string}) {
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
-                            onClick={async () => {
-                              try {
-                                const incomeDetail = await fetchIncomeById(row.original.id); // Access the income ID from row.original
-                                setSelectedIncome(incomeDetail); // Set the income details into the state
-                              } catch (error) {
-                                console.error("Error fetching income details:", error);
-                              }
-                            }}
+                            onClick={() => router.push(`/transaction-history/${row.original.id}`)}
                           >
                             View Income details
                           </DropdownMenuItem>

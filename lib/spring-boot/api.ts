@@ -9,7 +9,7 @@ export interface User {
 export interface Income {
   id: string;
   name: string;
-  amount: number;
+  amount: string;
   description: string;
   frequency: string;
   program: string;
