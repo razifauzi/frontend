@@ -21,6 +21,11 @@ const Home = async () => {
               totalBanks={1}
               totalCurrentBalance={120.35}
             />
+            <TotalBalance
+              accounts={[]}
+              totalBanks={1}
+              totalCurrentBalance={120.35}
+            />
           </header>
           <RecentTransactions/>
         </div>

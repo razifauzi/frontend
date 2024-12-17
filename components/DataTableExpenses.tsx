@@ -50,11 +50,12 @@ const badgeStyles: Record<string, string> = {
     // Add more mappings as needed
   };
   
-import { fetchIncomes} from '@/lib/spring-boot/api'
+
+import { fetchExpenses} from '@/lib/spring-boot/api'
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation'
 
-export const columns: ColumnDef<Income>[] = [
+export const columns: ColumnDef<Expenses>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -149,8 +150,8 @@ export const columns: ColumnDef<Income>[] = [
   },
 ]
 
-export function DataTableDemo() {
-  const [data, setData] = useState<Income[]>([]);
+export function DataTableExpenses() {
+  const [data, setData] = useState<Expenses[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -177,16 +178,16 @@ export function DataTableDemo() {
   })
 
   useEffect(() => {
-    async function loadIncomes() {
+    async function loadExpenses() {
       try {
-        const incomes = await fetchIncomes();
-        setData(incomes);
+        const expenses = await fetchExpenses();
+        setData(expenses);
       } catch (error) {
-        console.error("Error fetching incomes:", error)
+        console.error("Error fetching expenses:", error)
       }
     }
 
-    loadIncomes()
+    loadExpenses()
   }, [])
 
 
@@ -202,7 +203,7 @@ export function DataTableDemo() {
           }
           className="max-w-sm"
         />
-        <Button variant="outline"  onClick={() => router.push(`/income/add`)}>Add Income</Button>
+        <Button variant="outline"  onClick={() => router.push(`/expenses/add`)}>Add Expenses</Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="destructive" className="ml-auto">
@@ -276,15 +277,15 @@ export function DataTableDemo() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(row.original.id)} // Access the income ID from row.original
+                            onClick={() => navigator.clipboard.writeText(row.original.id)} // Access the expenses ID from row.original
                           >
                             Copy program ID
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
-                            onClick={() => router.push(`/income/${row.original.id}`)}
+                            onClick={() => router.push(`/expenses/${row.original.id}`)}
                           >
-                            View Income details
+                            View Expenses details
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

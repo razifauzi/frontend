@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,21 +10,9 @@ import { Form } from '@/components/ui/form';
 import CustomInput from '@/components/CustomInputIncome';
 import { useRouter } from 'next/navigation';
 import { fetchIncomeById, updateIncome } from '@/lib/spring-boot/api';
+import { expensesFormSchema } from '@/lib/utils';
 
-export const incomeFormSchema = (type: string) => z.object({
-  name: type === 'income-form' ? z.string().optional() : z.string().min(3, 'Name must be at least 3 characters long'),
-  frequency: type === 'income-form' ? z.string().optional() : z.string().min(3, 'Frequency must be at least 3 characters long'),
-  description: type === 'income-form' ? z.string().optional() : z.string().min(3, 'Description must be at least 3 characters long'),
-  amount: type === 'income-form' ? z.string().optional() : z.string().min(3, 'Amount must be at least 3 characters long'),
-  program: type === 'income-form' ? z.string().optional() : z.string().min(3, 'Program must be at least 3 characters long'),
-  fileName: type === 'income-form' ? z.string().optional() : z.string().min(3, 'Filename must be at least 3 characters long'),
-});
-
-interface Params {
-  id: string;
-}
-
-const TransactionHistoryByID = ({ type, params }: { type: string; params: Params }) => {
+const IncomeByID = ({ type, params }: { type: string; params: Params }) => {
   const { id } = params;
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -33,7 +20,7 @@ const TransactionHistoryByID = ({ type, params }: { type: string; params: Params
   const [error, setError] = useState<string | null>(null);
 
   // Generate the schema dynamically based on the type
-  const formSchema = incomeFormSchema(type);
+  const formSchema = expensesFormSchema(type);
 
   // Initialize useForm with the resolved schema
   const form = useForm<z.infer<typeof formSchema>>({
@@ -65,14 +52,23 @@ const TransactionHistoryByID = ({ type, params }: { type: string; params: Params
     fetchIncome();
   }, [id]);
 
-  const onSubmit = async (data: Partial<Income>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const result = await updateIncome(id, data); // Updated to use updateIncome
+      const incomeData: Income = {
+              id: data.id || "", 
+              name: data.name ?? "",
+              amount: data.amount ?? "",
+              description: data.description ?? "",
+              frequency: data.frequency ?? "",
+              program: data.program ?? "",
+              fileName: data.fileName ?? "",
+            };
+      const result = await updateIncome(id, incomeData); 
       console.log('Income successfully updated:', result);
-      router.push('/transaction-history'); // Redirect to income list
+      router.push('/income'); 
     } catch  {
       setError('Failed to update income details.');
     } finally {
@@ -82,11 +78,11 @@ const TransactionHistoryByID = ({ type, params }: { type: string; params: Params
 
 
   return (
-    <section className='auth-form'>
+    <section className='custom-form'>
       <header className='flex flex-col gap-5 md:gap-8'>
         <Link href='/' className='mb-12 cursor-pointer flex items-center gap-1'>
-          <Image src='/icons/logo.svg' width={34} height={34} alt='masjid logo' />
-          <h1 className='text-26 font-ibm-plex-serif font-bold text-black-1'>Masjid Muar</h1>
+          
+          <h1 className='text-26 font-ibm-plex-serif font-bold text-black-1'>Edit Income</h1>
         </Link>
       </header>
 
@@ -153,5 +149,5 @@ const TransactionHistoryByID = ({ type, params }: { type: string; params: Params
   );
 };
 
-export default TransactionHistoryByID;
+export default IncomeByID;
 

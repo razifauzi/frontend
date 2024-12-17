@@ -6,7 +6,7 @@ const TransactionHistory = () => {
   return (
     <div className='transactions'>
       <div className="transactions-header">
-        <HeaderBox title='Transaction History' subtext='See your bank details'/>
+        <HeaderBox title='Income Listing' subtext='See your bank details'/>
       </div>
       <section className='flex w-full flex-col gap-6'>
         <DataTableDemo/>

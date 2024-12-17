@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTableDemo } from './DataTable'
 import { cn } from '@/lib/utils'
+import { DataTableExpenses } from './DataTableExpenses'
 
 type Tab = {
     value: string;
@@ -13,19 +14,19 @@ type Tab = {
 };
 
 const RecentTransactions = () => {
-    const [activeTab, setActiveTab] = useState<string>('account');
+    const [activeTab, setActiveTab] = useState<string>('income');
     
     // Dynamic data for tabs (you can fetch this from an API or a static file)
     const tabsData: Tab[] = [
         { 
-            value: 'account', 
-            label: 'Account Transactions', 
+            value: 'income', 
+            label: 'Income', 
             content: <DataTableDemo /> // This will render a data table for the "account" tab
         },
         { 
-            value: 'password', 
-            label: 'Change Password', 
-            content: 'Change your password here.' // Content for the "password" tab
+            value: 'expenses', 
+            label: 'Expenses', 
+            content: <DataTableExpenses/>// Content for the "password" tab
         },
         // Add more tabs here as needed
     ];
@@ -36,7 +37,7 @@ const RecentTransactions = () => {
                 <h2 className='recent-transactions-label'>
                     Recent Transactions
                 </h2>
-                <Link href={`/transaction-history/`} className='view-all-btn'>
+                <Link href={`/income/`} className='view-all-btn'>
                     View all
                 </Link>
             </header>

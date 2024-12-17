@@ -197,6 +197,7 @@ export const getTransactionStatus = (date: Date) => {
 
 
 export const incomeFormSchema = (type:string) =>  z.object({
+  id: z.string().optional(),
   name: type === 'income-form' ? z.string().optional() : z.string()
     .min(3, "name must be at least 3 characters long"),
   frequency: type === 'income-form' ? z.string().optional() : z.string()
@@ -210,6 +211,24 @@ export const incomeFormSchema = (type:string) =>  z.object({
   fileName: type === 'income-form' ? z.string().optional() : z.string()
   .min(3, "program must be at least 3 characters long"),
 });
+
+
+export const expensesFormSchema = (type:string) =>  z.object({
+  id: z.string().optional(),
+  name: type === 'income-form' ? z.string().optional() : z.string()
+    .min(3, "name must be at least 3 characters long"),
+  frequency: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "frequency must be at least 3 characters long"),
+  description: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "description must be at least 3 characters long"),
+  amount: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "amount must be at least 3 characters long"),
+  program: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "program must be at least 3 characters long"),
+  fileName: type === 'income-form' ? z.string().optional() : z.string()
+  .min(3, "program must be at least 3 characters long"),
+});
+
 
 export const authFormSchema = (type:string) =>  z.object({
   //sign-up

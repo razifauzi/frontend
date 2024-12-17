@@ -1,20 +1,6 @@
 const API_BASE_URL: string = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
-export interface User {
-  id?: string; // Optional for creating a new user
-  name: string;
-  email: string;
-}
 
-export interface Income {
-  id: string;
-  name: string;
-  amount: string;
-  description: string;
-  frequency: string;
-  program: string;
-  fileName: string,
-}
 
 
 export const fetchData = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
@@ -60,4 +46,38 @@ export const updateIncome= async (id: string, income: Income): Promise<Income> =
 // Delete a income
 export const deleteIncome = async (id: string): Promise<void> => {
   await fetchData<void>(`/api/v1/income/${id}`, { method: "DELETE" });
+};
+
+
+// Fetch all expenses
+export const fetchExpenses= async (): Promise<Expenses[]> => {
+  return fetchData<Expenses[]>("/api/v1/expenses");
+};
+
+// Fetch a single Expenses by ID
+export const fetchExpensesById = async (id: string): Promise<Expenses> => {
+  return fetchData<Expenses>(`/api/v1/expenses/${id}`);
+};
+
+// Create a new Expenses
+export const createExpenses= async (expenses: Expenses): Promise<Expenses> => {
+  return fetchData<Expenses>("/api/v1/expenses", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(expenses),
+  });
+};
+
+// Update a Expenses
+export const updateExpenses= async (id: string, expenses: Expenses): Promise<Expenses> => {
+  return fetchData<Expenses>(`/api/v1/expenses/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(expenses),
+  });
+};
+
+// Delete a Expenses
+export const deleteExpenses = async (id: string): Promise<void> => {
+  await fetchData<void>(`/api/v1/expenses/${id}`, { method: "DELETE" });
 };

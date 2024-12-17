@@ -192,11 +192,11 @@ declare interface AuthFormProps {
   type: "sign-in" | "sign-up";
 }
 
-declare interface BankDropdownProps {
-  accounts: Account[];
-  setValue?: UseFormSetValue<any>;
-  otherStyles?: string;
-}
+// declare interface BankDropdownProps {
+//   accounts: Account[];
+//   setValue?: UseFormSetValue<any>;
+//   otherStyles?: string;
+// }
 
 declare interface BankTabItemProps {
   account: Account;
@@ -327,4 +327,28 @@ declare interface getBankProps {
 
 declare interface getBankByAccountIdProps {
   accountId: string;
+}
+
+declare interface Params {
+  id: string;
+}
+
+declare interface Income {
+  id: string;
+  name: string;
+  amount: string;
+  description: string;
+  frequency: string;
+  program: string;
+  fileName: string,
+}
+
+declare interface Expenses {
+  id: string;
+  name: string;
+  amount: string;
+  description: string;
+  frequency: string;
+  program: string;
+  fileName: string,
 }
