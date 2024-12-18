@@ -16,7 +16,7 @@ import { expensesFormSchema } from '@/lib/utils';
 const ExpensesByID = ({ type, params }: { type: string; params: Params }) => {
   const { id } = params;
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const [user] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -16,8 +16,8 @@ import { useRouter } from "next/navigation"
 const AddIncome = () => {
     const formSchema = expensesFormSchema('income-form')
     const router = useRouter()
-    const [user, setUser] = useState(null);
-    const [error, setError] = useState<string | null>(null);
+    const [user] = useState(null);
+    const [error] = useState<string | null>(null);
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         setIsLoading(true)

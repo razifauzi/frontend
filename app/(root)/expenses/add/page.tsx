@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import CustomInput from '@/components/CustomInputIncome'
 import { z } from "zod"
@@ -17,8 +16,8 @@ import { useRouter } from "next/navigation"
 const AddExpenses = () => {
     const formSchema = expensesFormSchema('expenses-form')
     const router = useRouter()
-    const [user, setUser] = useState(null);
-    const [error, setError] = useState<string | null>(null);
+    const [user] = useState(null);
+    const [error] = useState<string | null>(null);
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         setIsLoading(true)
