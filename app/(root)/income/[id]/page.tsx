@@ -8,19 +8,19 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import CustomInput from '@/components/CustomInputIncome';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { fetchIncomeById, updateIncome } from '@/lib/spring-boot/api';
-import { expensesFormSchema } from '@/lib/utils';
+import { incomeFormSchema } from '@/lib/utils';
 
-const IncomeByID = ({ type, params }: { type: string; params: Params }) => {
-  const { id } = params;
+const IncomeByID = () => {
+  const { id } = useParams();
   const router = useRouter();
   const [user] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Generate the schema dynamically based on the type
-  const formSchema = expensesFormSchema(type);
+  const formSchema = incomeFormSchema('income-form');
 
   // Initialize useForm with the resolved schema
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,46 +35,49 @@ const IncomeByID = ({ type, params }: { type: string; params: Params }) => {
     },
   });
 
-  // Fetch income details by ID (example implementation)
-  useEffect(() => {
-    const fetchIncome = async () => {
-      try {
+    useEffect(() => {
+      if (!id || Array.isArray(id)) return; // If id is not available or is an array, skip
+  
+      const fetchIncome = async () => {
+        try {
+          setIsLoading(true);
+          const incomeData = await fetchIncomeById(id); // Now `id` is guaranteed to be a string
+          form.reset(incomeData); // Populate form with fetched data
+        } catch {
+          setError('Failed to fetch expenses details.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+  
+      fetchIncome();
+    }, [id, form]); 
+
+      const onSubmit = async (data: z.infer<typeof formSchema>) => {
         setIsLoading(true);
-        const incomeData = await fetchIncomeById(id);
-        form.reset(incomeData); // Populate form with fetched data
-      } catch  {
-        setError('Failed to fetch income details.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchIncome();
-  }, [id,form]);
-
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const incomeData: Income = {
-              id: data.id || "", 
-              name: data.name ?? "",
-              amount: data.amount ?? "",
-              description: data.description ?? "",
-              frequency: data.frequency ?? "",
-              program: data.program ?? "",
-              fileName: data.fileName ?? "",
-            };
-      const result = await updateIncome(id, incomeData); 
-      console.log('Income successfully updated:', result);
-      router.push('/income'); 
-    } catch  {
-      setError('Failed to update income details.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setError(null);
+    
+        try {
+          const incomeId = Array.isArray(id) ? id[0] : id;
+    
+          const incomeData = {
+            id: incomeId || '',
+            name: data.name ?? '',
+            amount: data.amount ?? '',
+            description: data.description ?? '',
+            frequency: data.frequency ?? '',
+            program: data.program ?? '',
+            fileName: data.fileName ?? '',
+          };
+          const result = await updateIncome(incomeId, incomeData); 
+          console.log('Income successfully updated:', result);
+          router.push('/income'); 
+        } catch  {
+          setError('Failed to update income details.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
 
   return (
