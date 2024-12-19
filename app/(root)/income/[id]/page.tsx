@@ -50,7 +50,7 @@ const IncomeByID = ({ type, params }: { type: string; params: Params }) => {
     };
 
     fetchIncome();
-  }, [id]);
+  }, [id,form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);

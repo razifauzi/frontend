@@ -51,7 +51,7 @@ const ExpensesByID = ({ type, params }: { type: string; params: Params }) => {
     };
 
     fetchExpenses();
-  }, [id]);
+  }, [id,form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
