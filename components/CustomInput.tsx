@@ -7,6 +7,8 @@ import { Control, FieldPath } from "react-hook-form"
 import { z } from 'zod'
 import { authFormSchema } from '@/lib/utils'
 
+
+// @ts-ignore
 const formSchema = authFormSchema('sign-up')
 
 
