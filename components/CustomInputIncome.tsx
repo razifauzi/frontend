@@ -17,9 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-// @ts-ignore
 const formSchema = incomeFormSchema('income-form')
-
 
 interface CustomInput {
     control: Control<z.infer<typeof formSchema>>,
