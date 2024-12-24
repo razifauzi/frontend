@@ -260,3 +260,55 @@ export const authFormSchema = (type:string) =>  z.object({
     .regex(/[0-9]/, "Password must contain at least one digit")
     .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
 });
+
+
+export const incomeOptions = [
+  { key: "1", label: "KUTIPAN JUMAAT" },
+  { key: "2", label: "SUMBANGAN" },
+  { key: "3", label: "DERMA" },
+  { key: "4", label: "TABUNG AM" },
+  { key: "5", label: "TABUNG KEBAJIKAN" },
+  { key: "6", label: "KUMPULAN WANG ANAK YATIM" },
+  { key: "7", label: "HIBAH" },
+  { key: "ist", label: "HASIL WAKAF" },
+  { key: "cst_china", label: "KUMPULAN WANG KHAIRAT KEMATIAN" },
+  { key: "jst", label: "SEWA" },
+  { key: "kst", label: "SUMBANGAN JAIM" },
+  { key: "msk", label: "TERIMAAN DARIPADA JAIM" },
+  { key: "ist", label: "TABUNG KECEMASAN MASJID" },
+  { key: "cst_china", label: "TAHLIL" },
+  { key: "jst", label: "PELBAGAI" },
+  { key: "kst", label: "KUTIPAN TETAP" },
+  { key: "msk", label: "KUMPULAN WANG PEMBANGUNAN" },
+  { key: "ist", label: "KUMPULAN WANG ASNAF" },
+  { key: "cst_china", label: "TABUNG PENGIMARAHAN" },
+  { key: "jst", label: "TABUNG PEMBANGUNAN" },
+];
+
+
+export const expensesOptions = [
+  { key: "1", label: "AKTIVITI MASJID/SURAU" },
+  { key: "2", label: "ALAT TULISAN" },
+  { key: "3", label: "BELANJA TABUNG KEBAJIKAN" },
+  { key: "4", label: "BELANJA TABUNG PEMBANGUNAN" },
+  { key: "5", label: "BELANJA TABUNG PENGIMARAHAN" },
+  { key: "6", label: "BIL AIR" },
+  { key: "7", label: "BIL ELEKTRIK" },
+  { key: "8", label: "BIL TELEFON" },
+  { key: "9", label: "CAJ BANK" },
+  { key: "10", label: "CAJ BANK CEK ROSAK" },
+  { key: "msk", label: "DERMA/SUMBANGAN" },
+  { key: "ist", label: "ELAUN AJK" },
+  { key: "cst_china", label: "FOTOSTAT" },
+  { key: "jst", label: "GAJI" },
+  { key: "kst", label: "KERAIAN/JAMUAN" },
+  { key: "msk", label: "KHAIRAT KEMATIAN" },
+  { key: "ist", label: "PELABURAN" },
+  { key: "cst_china", label: "PETROL" },
+  { key: "jst", label: "QURBAN" },
+  { key: "kst", label: "REKUPMEN WANG PWR" },
+  { key: "msk", label: "SAGUHATI" },
+  { key: "ist", label: "SELENGGARA" },
+  { key: "cst_china", label: "SEMINAR/KURSUS LUAR" },
+  { key: "jst", label: "TAHLIL" },
+];

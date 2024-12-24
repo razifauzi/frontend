@@ -7,7 +7,7 @@ module.exports = {
     production : {
       key: 'key.pem',
       user : 'ubuntu',
-      host : '43.216.181.67',
+      host : '43.216.119.145',
       ref  : 'origin/main',
       repo : 'https://github.com/razifauzi/frontend.git',
       path : '/home/ubuntu',

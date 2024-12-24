@@ -12,6 +12,7 @@ import CustomInput from '@/components/CustomInputIncome';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchExpensesById, updateExpenses  } from '@/lib/spring-boot/api';
 import { incomeFormSchema } from '@/lib/utils';
+import { expensesOptions } from "@/lib/utils"
 
 const ExpensesByID = () => {
   const { id } = useParams();
@@ -123,6 +124,7 @@ const ExpensesByID = () => {
                     name='program'
                     label='Program'
                     placeholder='Example: Program'
+                    options={expensesOptions}
                   />
                 </div>
                 <CustomInput

@@ -11,6 +11,7 @@ import CustomInput from '@/components/CustomInputIncome';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchIncomeById, updateIncome } from '@/lib/spring-boot/api';
 import { incomeFormSchema } from '@/lib/utils';
+import { incomeOptions } from "@/lib/utils"
 
 const IncomeByID = () => {
   const { id } = useParams();
@@ -122,6 +123,7 @@ const IncomeByID = () => {
                     name='program'
                     label='Program'
                     placeholder='Example: Program'
+                    options={incomeOptions}
                   />
                 </div>
                 <CustomInput

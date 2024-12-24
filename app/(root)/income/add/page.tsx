@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { useForm } from "react-hook-form"
 import { createIncome } from "@/lib/spring-boot/api"
 import { useRouter } from "next/navigation"
+import { incomeOptions } from "@/lib/utils"
 
 
 const AddIncome = () => {
@@ -18,6 +19,7 @@ const AddIncome = () => {
     const router = useRouter()
     const [user] = useState(null);
     const [error] = useState<string | null>(null);
+    const [isLoading,setIsLoading] = React.useState(false)
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         setIsLoading(true)
@@ -41,11 +43,11 @@ const AddIncome = () => {
         }
       }
 
-      const [isLoading,setIsLoading] = React.useState(false)
-        const form = useForm<z.infer<typeof formSchema>>({
-          resolver: zodResolver(formSchema),
-          defaultValues: {},
-        })
+      
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {},
+    })
   return (
     <section className='custom-form'>
       <header className='flex flex-col gap-5 md:gap-8'>
@@ -89,6 +91,7 @@ const AddIncome = () => {
                           name='program'
                           label='Program'
                           placeholder='Example: Program'
+                          options={incomeOptions}
                         />
                       </div>
                       <CustomInput

@@ -23,10 +23,11 @@ interface CustomInput {
     control: Control<z.infer<typeof formSchema>>,
     name: FieldPath<z.infer<typeof formSchema>>,
     label: string,
-    placeholder: string
+    placeholder: string,
+    options?: { key: string; label: string }[];
 }
 
-const CustomInputIncome = ({control,name,label,placeholder}: CustomInput) => {
+const CustomInputIncome = ({control,name,label,placeholder,options}: CustomInput) => {
   return (
     <FormField
     control={control}
@@ -44,7 +45,7 @@ const CustomInputIncome = ({control,name,label,placeholder}: CustomInput) => {
                   className='input-class'
                   {...field}
                 />
-              ) : name === 'program' ? (
+              ) : name === 'program' && options ? (
                 <Select onValueChange={field.onChange} 
                         value={field.value} 
                 >
@@ -53,12 +54,11 @@ const CustomInputIncome = ({control,name,label,placeholder}: CustomInput) => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Program</SelectLabel>
-                      <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
-                      <SelectItem value="ist">India Standard Time (IST)</SelectItem>
-                      <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
-                      <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
-                      <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
+                      {options.map((option) => (
+                        <SelectItem key={option.key} value={option.key}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
