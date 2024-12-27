@@ -16,16 +16,7 @@ const Home = async () => {
               user={ 'Guest' }
               subtext="Access"
             />
-            <TotalBalance
-              accounts={[]}
-              totalBanks={1}
-              totalCurrentBalance={120.35}
-            />
-            <TotalBalance
-              accounts={[]}
-              totalBanks={1}
-              totalCurrentBalance={120.35}
-            />
+            <TotalBalance/>
           </header>
           <RecentTransactions/>
         </div>

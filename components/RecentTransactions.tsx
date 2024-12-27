@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DataTableDemo } from './DataTable'
+import { DataTable } from './DataTable'
 import { cn } from '@/lib/utils'
 import { DataTableExpenses } from './DataTableExpenses'
 
@@ -21,12 +21,12 @@ const RecentTransactions = () => {
         { 
             value: 'income', 
             label: 'Income', 
-            content: <DataTableDemo /> // This will render a data table for the "account" tab
+            content: <DataTable type="incomes"  /> 
         },
         { 
             value: 'expenses', 
             label: 'Expenses', 
-            content: <DataTableExpenses/>// Content for the "password" tab
+            content: <DataTable type="expenses"  /> 
         },
         // Add more tabs here as needed
     ];

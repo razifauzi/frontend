@@ -6,32 +6,39 @@ import { Doughnut } from 'react-chartjs-2'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = ({accounts}:DoughnutChartProps) => {
-    const accountNames = accounts.map((a) => a.name);
-    const balances = accounts.map((a) => a.currentBalance)
-    const data = {
-        datasets: [
-          {
-            label: 'Banks',
-            data: balances,
-            backgroundColor: ['#0747b6', '#2265d8', '#2f91fa'] 
-          }
-        ],
-        labels: accountNames
-      }
-  return (
-      <Doughnut 
-        data={data}
-        options={{
-            cutout: '60%',
-            plugins:{
-                legend:{
-                    display:false
-                }
-            }
-        }}
-      />
-  )
+interface DoughnutChartProps {
+  income: number;
+  expenses: number;
 }
 
-export default DoughnutChart
+const DoughnutChart = ({ income, expenses }: DoughnutChartProps) => {
+  const accountNames = ['Income', 'Expenses'];
+  const balances = [income, expenses];
+
+  const data = {
+    datasets: [
+      {
+        label: 'Banks',
+        data: balances,
+        backgroundColor: ['#0747b6', '#2265d8'],
+      }
+    ],
+    labels: accountNames
+  };
+
+  return (
+    <Doughnut
+      data={data}
+      options={{
+        cutout: '60%',
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }}
+    />
+  );
+};
+
+export default DoughnutChart;

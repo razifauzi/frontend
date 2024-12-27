@@ -1,4 +1,4 @@
-import { DataTableExpenses } from '@/components/DataTableExpenses'
+import { DataTable } from '@/components/DataTable'
 import HeaderBox from '@/components/HeaderBox'
 import React from 'react'
 
@@ -9,7 +9,7 @@ const TransactionHistory = () => {
         <HeaderBox title='Expenses Listing' subtext='See your bank details'/>
       </div>
       <section className='flex w-full flex-col gap-6'>
-        <DataTableExpenses/>
+        <DataTable type='expenses'/>
       </section>
     </div>
   )
