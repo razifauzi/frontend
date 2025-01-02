@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge" 
 import { incomeOptions, expensesOptions } from '@/lib/utils';
-import { fetchIncomes, fetchExpenses } from '@/lib/spring-boot/api'
+import { fetchIncomes, fetchExpenses,fetchCustomers,fetchVendors } from '@/lib/spring-boot/api'
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation'
 
@@ -48,12 +48,12 @@ const badgeStyles: Record<string, string> = {
 }
 
 const getProgramLabel = (program: string, type: TableType): string => {
-  const options = type === 'incomes' ? incomeOptions : expensesOptions;
+  const options = type === 'income' ? incomeOptions : expensesOptions;
   const option = options.find((option) => option.key === program);
   return option ? option.label : program; // Fallback to raw value if not found
 };
 
-type TableType = 'incomes' | 'expenses';
+type TableType = 'income' | 'expenses' | 'customer' | 'vendor';
 
 interface DataTableProps {
   type: TableType;
@@ -82,6 +82,57 @@ const generateColumns = (type: TableType) => [
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "createdts",
+    header: ({ column }: { column: any }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created Date
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }: { row: any }) => {
+      const rawValue = row.getValue("createdts");
+      const date = new Date(rawValue);
+
+      const formattedDate = new Intl.DateTimeFormat("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }).format(date);
+
+     // Format the time part (hh:mm:ss AM/PM)
+      const formattedTime = new Intl.DateTimeFormat("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true, // Ensure AM/PM format
+      }).format(date);
+
+      const [month, day, year] = formattedDate.split(" ");
+    
+    return <div className="text-left">{`${day} ${month} ${year} ${formattedTime}`}</div>;
+    },
+  },  
+  {
+    accessorKey: type === 'income' ? "incomePrefix" : "expensesPrefix",
+    header: ({ column }: { column: any }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          {type === 'income' ? 'Income No' : 'Expenses No'}
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }: { row: any }) => <div className="text-left">{row.getValue(type === 'income' ? "incomePrefix" : 'expensesPrefix')}</div>,
   },
   {
     accessorKey: "name",
@@ -131,6 +182,14 @@ const generateColumns = (type: TableType) => [
       );
     }
   },
+  
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }: { row: any }) => (
+      <div className="capitalize">{row.getValue("description")}</div>
+    ),
+  },
   {
     accessorKey: "amount",
     header: () => <div className="text-center">Amount</div>,
@@ -144,13 +203,6 @@ const generateColumns = (type: TableType) => [
       return <div className="font-semibold text-[#f00438] text-center ">{formatted}</div>;
     },
   },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }: { row: any }) => (
-      <div className="capitalize">{row.getValue("description")}</div>
-    ),
-  },
 ];
 
 export function DataTable({ type }: DataTableProps) {
@@ -161,7 +213,10 @@ export function DataTable({ type }: DataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({})
   const router = useRouter()
   const columns = generateColumns(type);
-  const fetchData = type === 'incomes' ? fetchIncomes : fetchExpenses;
+  const fetchData = type === 'income' 
+                  ? fetchIncomes 
+                  : type === 'expenses' ? fetchExpenses 
+                  : type === 'customer' ? fetchCustomers : fetchVendors;
   
   useEffect(() => {
     async function loadData() {
@@ -208,7 +263,7 @@ export function DataTable({ type }: DataTableProps) {
           }
           className="max-w-sm"
         />
-        <Button variant="outline" onClick={() => router.push(`/${type}/add`)}>Add {type === 'incomes' ? 'Income' : 'Expense'}</Button>
+        <Button variant="outline" onClick={() => router.push(`/${type}/add`)}>Add {type === 'income' ? 'Income' : 'Expense'}</Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="destructive" className="ml-auto">
@@ -290,7 +345,7 @@ export function DataTable({ type }: DataTableProps) {
                         <DropdownMenuItem
                           onClick={() => router.push(`/${type}/${row.original.id}`)}
                         >
-                          View {type === 'incomes' ? 'Income' : 'Expense'} details
+                          View {type === 'income' ? 'Income' : 'Expense'} details
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -307,7 +362,7 @@ export function DataTable({ type }: DataTableProps) {
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={4} className="text-left font-semibold">
+              <TableCell colSpan={6} className="text-left font-semibold">
                 Total Amount
               </TableCell>
               <TableCell className="text-center font-semibold">

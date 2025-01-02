@@ -341,6 +341,9 @@ declare interface Income {
   frequency: string;
   program: string;
   fileName: string,
+  //incomePrefix: string,
+  // date: string | null;     
+  //createdts: string | null; 
 }
 
 declare interface Expenses {
@@ -350,5 +353,55 @@ declare interface Expenses {
   description: string;
   frequency: string;
   program: string;
-  fileName: string,
+  fileName?: string,
+  // date: string | null;     
+  //createdts: string | null; 
+}
+
+declare interface Customers {
+  id: string;
+  name: string;
+  amount: string;
+  remarks: string;
+  frequency: string;
+  salutation: string;
+  fileName?: string,
+  customerType: string;
+  firstName: string;
+  lastName: string;
+  companyName: string;
+  displayName: string;
+  email: string,
+  mobileNo: string;
+  website: string;
+  billingAddress: string;
+  shippingAddress: string;
+  // date: string | null;     
+  //createdts: string | null; 
+}
+
+declare interface Vendors {
+  id: string;
+  name: string;
+  amount: string;
+  description: string;
+  frequency: string;
+  program: string;
+  fileName?: string,
+  // date: string | null;     
+  //createdts: string | null; 
+}
+
+declare interface StatCardProps {
+  title: string
+  value: string
+  icon: LucideIcon
+  description: string
+}
+
+declare type BrowserData = {
+  browser: string;
+  visitors: number;
+  fill: string;
+  percentage: number;
 }

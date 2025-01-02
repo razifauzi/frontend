@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from './DataTable'
 import { cn } from '@/lib/utils'
-import { DataTableExpenses } from './DataTableExpenses'
+
 
 type Tab = {
     value: string;
@@ -21,7 +21,7 @@ const RecentTransactions = () => {
         { 
             value: 'income', 
             label: 'Income', 
-            content: <DataTable type="incomes"  /> 
+            content: <DataTable type="income"  /> 
         },
         { 
             value: 'expenses', 

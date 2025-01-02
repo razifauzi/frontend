@@ -1,20 +1,18 @@
+import { DataTable } from '@/components/DataTable'
 import HeaderBox from '@/components/HeaderBox'
-import Report from '@/components/Reports'
 import React from 'react'
 
-const Reports = () => {
+const TransactionHistory = () => {
   return (
     <div className='transactions'>
       <div className="transactions-header">
-        <HeaderBox title='Income & Expenses Charts' subtext='See all details'/>
+        <HeaderBox title='Vendor Listing' subtext='See your vendor details'/>
       </div>
       <section className='flex w-full flex-col gap-6'>
-        <Report/>
-        <Report/>
-        
+        <DataTable type="vendor" />
       </section>
     </div>
   )
 }
 
-export default Reports
+export default TransactionHistory;

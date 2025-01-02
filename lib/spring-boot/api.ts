@@ -81,3 +81,70 @@ export const updateExpenses= async (id: string, expenses: Expenses): Promise<Exp
 export const deleteExpenses = async (id: string): Promise<void> => {
   await fetchData<void>(`/api/v1/expenses/${id}`, { method: "DELETE" });
 };
+
+
+// Fetch all customer
+export const fetchCustomers= async (): Promise<Customers[]> => {
+  return fetchData<Customers[]>("/api/v1/customer");
+};
+
+// Fetch a single Customer by ID
+export const fetchCustomerById = async (id: string): Promise<Customers> => {
+  return fetchData<Customers>(`/api/v1/customer/${id}`);
+};
+
+// Create a new Customer
+export const createCustomer= async (customers: Customers): Promise<Customers> => {
+  return fetchData<Customers>("/api/v1/customer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(customers),
+  });
+};
+
+// Update a Customer
+export const updateCustomer= async (id: string, customers: Customers): Promise<Customers> => {
+  return fetchData<Customers>(`/api/v1/customer/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(customers),
+  });
+};
+
+// Delete a Customer
+export const deleteCustomer = async (id: string): Promise<void> => {
+  await fetchData<void>(`/api/v1/customer/${id}`, { method: "DELETE" });
+};
+
+// Fetch all Vendor
+export const fetchVendors= async (): Promise<Vendors[]> => {
+  return fetchData<Vendors[]>("/api/v1/vendor");
+};
+
+// Fetch a single Vendor by ID
+export const fetchVendorById = async (id: string): Promise<Vendors> => {
+  return fetchData<Vendors>(`/api/v1/vendor/${id}`);
+};
+
+// Create a new Vendor
+export const createVendor= async (vendor: Vendors): Promise<Vendors> => {
+  return fetchData<Vendors>("/api/v1/vendor", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(vendor),
+  });
+};
+
+// Update a Vendor
+export const updateVendor= async (id: string, vendor: Vendors): Promise<Vendors> => {
+  return fetchData<Vendors>(`/api/v1/vendor/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(vendor),
+  });
+};
+
+// Delete a Vendor
+export const deleteVendor = async (id: string): Promise<void> => {
+  await fetchData<void>(`/api/v1/vendor/${id}`, { method: "DELETE" });
+};

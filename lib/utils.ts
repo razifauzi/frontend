@@ -198,6 +198,7 @@ export const getTransactionStatus = (date: Date) => {
 
 export const incomeFormSchema = (type:string) =>  z.object({
   id: z.string().optional(),
+  // incomePrefix: z.string().optional(),
   name: type === 'income-form' ? z.string().optional() : z.string()
     .min(3, "name must be at least 3 characters long"),
   frequency: type === 'income-form' ? z.string().optional() : z.string()
@@ -207,7 +208,7 @@ export const incomeFormSchema = (type:string) =>  z.object({
   amount: type === 'income-form' ? z.string().optional() : z.string()
   .min(3, "amount must be at least 3 characters long"),
   program: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "program must be at least 3 characters long"),
+  .min(1, "program must be at least 3 characters long"),
   fileName: type === 'income-form' ? z.string().optional() : z.string()
   .min(3, "program must be at least 3 characters long"),
 });
@@ -215,6 +216,7 @@ export const incomeFormSchema = (type:string) =>  z.object({
 
 export const expensesFormSchema = (type:string) =>  z.object({
   id: z.string().optional(),
+  // incomePrefix: z.string().optional(),
   name: type === 'income-form' ? z.string().optional() : z.string()
     .min(3, "name must be at least 3 characters long"),
   frequency: type === 'income-form' ? z.string().optional() : z.string()
@@ -224,7 +226,7 @@ export const expensesFormSchema = (type:string) =>  z.object({
   amount: type === 'income-form' ? z.string().optional() : z.string()
   .min(3, "amount must be at least 3 characters long"),
   program: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "program must be at least 3 characters long"),
+  .min(1, "program must be at least 3 characters long"),
   fileName: type === 'income-form' ? z.string().optional() : z.string()
   .min(3, "program must be at least 3 characters long"),
 });
@@ -270,19 +272,19 @@ export const incomeOptions = [
   { key: "5", label: "TABUNG KEBAJIKAN" },
   { key: "6", label: "KUMPULAN WANG ANAK YATIM" },
   { key: "7", label: "HIBAH" },
-  { key: "ist", label: "HASIL WAKAF" },
-  { key: "cst_china", label: "KUMPULAN WANG KHAIRAT KEMATIAN" },
-  { key: "jst", label: "SEWA" },
-  { key: "kst", label: "SUMBANGAN JAIM" },
-  { key: "msk", label: "TERIMAAN DARIPADA JAIM" },
-  { key: "ist", label: "TABUNG KECEMASAN MASJID" },
-  { key: "cst_china", label: "TAHLIL" },
-  { key: "jst", label: "PELBAGAI" },
-  { key: "kst", label: "KUTIPAN TETAP" },
-  { key: "msk", label: "KUMPULAN WANG PEMBANGUNAN" },
-  { key: "ist", label: "KUMPULAN WANG ASNAF" },
-  { key: "cst_china", label: "TABUNG PENGIMARAHAN" },
-  { key: "jst", label: "TABUNG PEMBANGUNAN" },
+  { key: "8", label: "HASIL WAKAF" },
+  { key: "9", label: "KUMPULAN WANG KHAIRAT KEMATIAN" },
+  { key: "10", label: "SEWA" },
+  { key: "11", label: "SUMBANGAN JAIM" },
+  { key: "12", label: "TERIMAAN DARIPADA JAIM" },
+  { key: "13", label: "TABUNG KECEMASAN MASJID" },
+  { key: "14", label: "TAHLIL" },
+  { key: "15", label: "PELBAGAI" },
+  { key: "16", label: "KUTIPAN TETAP" },
+  { key: "17", label: "KUMPULAN WANG PEMBANGUNAN" },
+  { key: "18", label: "KUMPULAN WANG ASNAF" },
+  { key: "19", label: "TABUNG PENGIMARAHAN" },
+  { key: "20", label: "TABUNG PEMBANGUNAN" },
 ];
 
 
@@ -297,18 +299,18 @@ export const expensesOptions = [
   { key: "8", label: "BIL TELEFON" },
   { key: "9", label: "CAJ BANK" },
   { key: "10", label: "CAJ BANK CEK ROSAK" },
-  { key: "msk", label: "DERMA/SUMBANGAN" },
-  { key: "ist", label: "ELAUN AJK" },
-  { key: "cst_china", label: "FOTOSTAT" },
-  { key: "jst", label: "GAJI" },
-  { key: "kst", label: "KERAIAN/JAMUAN" },
-  { key: "msk", label: "KHAIRAT KEMATIAN" },
-  { key: "ist", label: "PELABURAN" },
-  { key: "cst_china", label: "PETROL" },
-  { key: "jst", label: "QURBAN" },
-  { key: "kst", label: "REKUPMEN WANG PWR" },
-  { key: "msk", label: "SAGUHATI" },
-  { key: "ist", label: "SELENGGARA" },
-  { key: "cst_china", label: "SEMINAR/KURSUS LUAR" },
-  { key: "jst", label: "TAHLIL" },
+  { key: "11", label: "DERMA/SUMBANGAN" },
+  { key: "12", label: "ELAUN AJK" },
+  { key: "13", label: "FOTOSTAT" },
+  { key: "14", label: "GAJI" },
+  { key: "15", label: "KERAIAN/JAMUAN" },
+  { key: "16", label: "KHAIRAT KEMATIAN" },
+  { key: "17", label: "PELABURAN" },
+  { key: "18", label: "PETROL" },
+  { key: "19", label: "QURBAN" },
+  { key: "20", label: "REKUPMEN WANG PWR" },
+  { key: "21", label: "SAGUHATI" },
+  { key: "22", label: "SELENGGARA" },
+  { key: "23", label: "SEMINAR/KURSUS LUAR" },
+  { key: "24", label: "TAHLIL" },
 ];

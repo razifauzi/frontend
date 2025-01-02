@@ -33,8 +33,8 @@ const CustomInputIncome = ({control,name,label,placeholder,options}: CustomInput
     control={control}
     name={name}
     render={({ field }) => (
-     <div className='form-item'>
-        <FormLabel className='form-label'>
+     <div className='flex flex-col gap-1.5'>
+        <FormLabel className='text-14 w-full max-w-[280px] font-medium text-gray-700'>
           {label}
         </FormLabel>
         <div className="flex w-full flex-col">
