@@ -1,19 +1,13 @@
-import { DataTable } from '@/components/DataTable'
 import HeaderBox from '@/components/HeaderBox'
-import React from 'react'
+import { IncomeDataTable } from "@/components/income-data-table"
+import { Toaster } from "@/components/ui/toaster"
 
-const TransactionHistory = () => {
+export default function IncomePage() {
   return (
-    <div className='transactions'>
-      <div className="transactions-header">
+    <div className="container mx-auto py-10">
         <HeaderBox title='Income Listing' subtext='See your income details'/>
-      </div>
-      <section className='flex w-full flex-col gap-6'>
-        {/* Pass 'incomes' as the type */}
-        <DataTable type="income" />
-      </section>
+        <IncomeDataTable />
+      <Toaster />
     </div>
   )
 }
-
-export default TransactionHistory;

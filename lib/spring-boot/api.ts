@@ -1,7 +1,15 @@
-const API_BASE_URL: string = process.env.NEXT_PUBLIC_API_URL || "https://cmssolution.com.my";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
-
+function convertDates(income: any): Income {
+  return {
+    ...income,
+    startDate: new Date(income.startDate),
+    endDate: income.endDate ? new Date(income.endDate) : undefined,
+    receivedAt: new Date(income.receivedAt),
+  }
+}
 
 export const fetchData = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -14,40 +22,84 @@ export const fetchData = async <T>(endpoint: string, options: RequestInit = {}):
   return response.json();
 };
 
-
 // Fetch all income
-export const fetchIncomes= async (): Promise<Income[]> => {
-  return fetchData<Income[]>("/api/v1/income");
-};
+// export const fetchIncomes= async (): Promise<Income[]> => {
+//   return fetchData<Income[]>("/api/v1/income");
+// };
+export async function fetchIncomes(): Promise<Income[]> {
+  try {
+    const incomes = await fetchData<Income[]>('/api/v1/income');
+    return incomes.map(convertDates);
+  } catch (error) {
+    console.error('Error fetching incomes:', error);
+    throw new Error('Failed to fetch incomes');
+  }
+}
+
 
 // Fetch a single income by ID
-export const fetchIncomeById = async (id: string): Promise<Income> => {
-  return fetchData<Income>(`/api/v1/income/${id}`);
-};
+// export const fetchIncomeById = async (id: string): Promise<Income> => {
+//   return fetchData<Income>(`/api/v1/income/${id}`);
+// };
+export async function fetchIncomeById(id: string): Promise<Income> {
+  const income = await fetchData<Income>(`/api/v1/income/${id}`);
+  return convertDates(income);
+}
 
 // Create a new income
-export const createIncome= async (income: Income): Promise<Income> => {
-  return fetchData<Income>("/api/v1/income", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(income),
+// export const createIncome= async (income: Income): Promise<Income> => {
+//   return fetchData<Income>("/api/v1/income", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(income),
+//   });
+// };
+export async function createIncome(income: Omit<Income, 'id'>): Promise<Income> {
+  const newIncome = await fetchData<Income>('/api/v1/income', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ...income,
+      receivedts: income.receivedts.toISOString(),
+    }),
   });
-};
+  return convertDates(newIncome);
+}
+
 
 // Update a income
-export const updateIncome= async (id: string, income: Income): Promise<Income> => {
-  return fetchData<Income>(`/api/v1/income/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(income),
+// export const updateIncome= async (id: string, income: Income): Promise<Income> => {
+//   return fetchData<Income>(`/api/v1/income/${id}`, {
+//     method: "PUT",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(income),
+//   });
+// };
+export async function updateIncome(id: string, income: Partial<Income>): Promise<Income> {
+  const updatedIncome = await fetchData<Income>(`/api/v1/income/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ...income,
+      receivedts: income.receivedts?.toISOString(),
+    }),
   });
-};
+  return convertDates(updatedIncome);
+}
 
 // Delete a income
-export const deleteIncome = async (id: string): Promise<void> => {
-  await fetchData<void>(`/api/v1/income/${id}`, { method: "DELETE" });
-};
-
+// export const deleteIncome = async (id: string): Promise<void> => {
+//   await fetchData<void>(`/api/v1/income/${id}`, { method: "DELETE" });
+// };
+export async function deleteIncome(id: string): Promise<void> {
+  await fetchData<void>(`/api/v1/income/${id}`, {
+    method: 'DELETE',
+  });
+}
 
 // Fetch all expenses
 export const fetchExpenses= async (): Promise<Expenses[]> => {
