@@ -1,5 +1,5 @@
 import HeaderBox from '@/components/HeaderBox'
-import { IncomeDataTable } from "@/components/income-data-table"
+import { IncomeDataTable } from "@/components/income/income-data-table"
 import { Toaster } from "@/components/ui/toaster"
 
 export default function IncomePage() {

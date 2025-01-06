@@ -130,44 +130,6 @@ export function getAccountTypeColors(type: AccountTypes) {
   }
 }
 
-// export function countTransactionCategories(
-//   transactions: Transaction[]
-// ): CategoryCount[] {
-//   const categoryCounts: { [category: string]: number } = {};
-//   let totalCount = 0;
-
-//   // Iterate over each transaction
-//   transactions &&
-//     transactions.forEach((transaction) => {
-//       // Extract the category from the transaction
-//       const category = transaction.category;
-
-//       // If the category exists in the categoryCounts object, increment its count
-//       if (categoryCounts.hasOwnProperty(category)) {
-//         categoryCounts[category]++;
-//       } else {
-//         // Otherwise, initialize the count to 1
-//         categoryCounts[category] = 1;
-//       }
-
-//       // Increment total count
-//       totalCount++;
-//     });
-
-  // Convert the categoryCounts object to an array of objects
-//   const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
-//     (category) => ({
-//       name: category,
-//       count: categoryCounts[category],
-//       totalCount,
-//     })
-//   );
-
-//   // Sort the aggregatedCategories array by count in descending order
-//   aggregatedCategories.sort((a, b) => b.count - a.count);
-
-//   return aggregatedCategories;
-// }
 
 export function extractCustomerIdFromUrl(url: string) {
   // Split the URL string by '/'
@@ -195,42 +157,59 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
+export const incomeSchema = z.object({
+  name: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  amount:  z.preprocess(
+    (value) => (typeof value === 'string' ? parseFloat(value) : value),
+    z.number().positive({ message: 'Amount must be a positive number.' })
+  ),
+  frequency:  z.preprocess(
+    (value) => (typeof value === 'string' ? parseFloat(value) : value),
+    z.number().positive({ message: 'Amount must be a positive number.' })
+  ),
+  receivedts: z.date().optional(),
+  description: z.string().max(500, { message: 'Description must not exceed 500 characters.' }).optional(),
+  paymentMethod: z.enum(['1', '2', '3', '4']),
+  category: z.enum(['1', '2', '3', '4']),
+  fileName: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  //fileName: z.instanceof(File).optional(),
+})
 
-export const incomeFormSchema = (type:string) =>  z.object({
-  id: z.string().optional(),
-  // incomePrefix: z.string().optional(),
-  name: type === 'income-form' ? z.string().optional() : z.string()
-    .min(3, "name must be at least 3 characters long"),
-  frequency: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "frequency must be at least 3 characters long"),
-  description: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "description must be at least 3 characters long"),
-  amount: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "amount must be at least 3 characters long"),
-  program: type === 'income-form' ? z.string().optional() : z.string()
-  .min(1, "program must be at least 3 characters long"),
-  fileName: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "program must be at least 3 characters long"),
-});
+export const expensesSchema = z.object({
+  name: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  amount:  z.preprocess(
+    (value) => (typeof value === 'string' ? parseFloat(value) : value),
+    z.number().positive({ message: 'Amount must be a positive number.' })
+  ),
+  frequency:  z.preprocess(
+    (value) => (typeof value === 'string' ? parseFloat(value) : value),
+    z.number().positive({ message: 'Amount must be a positive number.' })
+  ),
+  receivedts: z.date().optional(),
+  description: z.string().max(500, { message: 'Description must not exceed 500 characters.' }).optional(),
+  paymentMethod: z.enum(['1', '2', '3', '4']),
+  category: z.enum(['1', '2', '3', '4']),
+  fileName: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  //fileName: z.instanceof(File).optional(),
+})
 
-
-export const expensesFormSchema = (type:string) =>  z.object({
-  id: z.string().optional(),
-  // incomePrefix: z.string().optional(),
-  name: type === 'income-form' ? z.string().optional() : z.string()
-    .min(3, "name must be at least 3 characters long"),
-  frequency: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "frequency must be at least 3 characters long"),
-  description: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "description must be at least 3 characters long"),
-  amount: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "amount must be at least 3 characters long"),
-  program: type === 'income-form' ? z.string().optional() : z.string()
-  .min(1, "program must be at least 3 characters long"),
-  fileName: type === 'income-form' ? z.string().optional() : z.string()
-  .min(3, "program must be at least 3 characters long"),
-});
-
+export const customerSchema = z.object({
+  name: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  amount:  z.preprocess(
+    (value) => (typeof value === 'string' ? parseFloat(value) : value),
+    z.number().positive({ message: 'Amount must be a positive number.' })
+  ),
+  frequency:  z.preprocess(
+    (value) => (typeof value === 'string' ? parseFloat(value) : value),
+    z.number().positive({ message: 'Amount must be a positive number.' })
+  ),
+  receivedts: z.date().optional(),
+  description: z.string().max(500, { message: 'Description must not exceed 500 characters.' }).optional(),
+  paymentMethod: z.enum(['1', '2', '3', '4']),
+  category: z.enum(['1', '2', '3', '4']),
+  fileName: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  //fileName: z.instanceof(File).optional(),
+})
 
 export const authFormSchema = (type:string) =>  z.object({
   //sign-up
@@ -263,7 +242,6 @@ export const authFormSchema = (type:string) =>  z.object({
     .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
 });
 
-
 export const incomeOptions = [
   { key: "1", label: "KUTIPAN JUMAAT" },
   { key: "2", label: "SUMBANGAN" },
@@ -286,7 +264,6 @@ export const incomeOptions = [
   { key: "19", label: "TABUNG PENGIMARAHAN" },
   { key: "20", label: "TABUNG PEMBANGUNAN" },
 ];
-
 
 export const expensesOptions = [
   { key: "1", label: "AKTIVITI MASJID/SURAU" },
@@ -313,4 +290,33 @@ export const expensesOptions = [
   { key: "22", label: "SELENGGARA" },
   { key: "23", label: "SEMINAR/KURSUS LUAR" },
   { key: "24", label: "TAHLIL" },
+];
+
+export const customerTypeOptions = [
+  { key: "1", label: "Prospect" },
+  { key: "2", label: "Customer" },
+  { key: "3", label: "Donator" },
+];
+
+export const salutationOptions = [
+  { key: "1", label: "Mr" },
+  { key: "2", label: "Mrs" },
+  { key: "3", label: "Encik" },
+  { key: "4", label: "Tuan" },
+  { key: "5", label: "Cik" },
+  { key: "6", label: "Puan" },
+  { key: "7", label: "Dato" },
+  { key: "8", label: "Datin" },
+  { key: "9", label: "Tan Sri" },
+  { key: "10", label: "Dato Sri" },
+  { key: "11", label: "YB" },
+  { key: "12", label: "Tun" },
+];
+
+export const paymentMethodOptions = [
+  { key: "1", label: "Direct Deposit" },
+  { key: "2", label: "Check" },
+  { key: "3", label: "Cash" },
+  { key: "4", label: "Other" },
+
 ];

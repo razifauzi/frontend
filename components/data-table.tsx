@@ -42,7 +42,6 @@ interface DynamicDataTableProps<TData, TValue> {
   filterColumn?: string
   linkColumn?: string
   linkPrefix?: string
-  categoryOptions?: { value: Category; label: string }[] 
 }
 
 export function DynamicDataTable<TData extends { id: string }, TValue>({
@@ -51,7 +50,6 @@ export function DynamicDataTable<TData extends { id: string }, TValue>({
   filterColumn,
   linkColumn,
   linkPrefix,
-  categoryOptions,
 }: DynamicDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -101,14 +99,14 @@ export function DynamicDataTable<TData extends { id: string }, TValue>({
     <div className="w-full">
       <div className="flex items-center justify-between py-4">
         <Input
-                  placeholder="Filter category..."
-                  value={(table.getColumn("category")?.getFilterValue() as string) ?? ""}
+                  placeholder="Filter ..."
+                  value={(table.getColumn("program")?.getFilterValue() as string) ?? ""}
                   onChange={(event) =>
-                    table.getColumn("category")?.setFilterValue(event.target.value)
+                    table.getColumn("program")?.setFilterValue(event.target.value)
                   }
                   className="max-w-sm"
                 />
-        <Button variant="outline" onClick={() => router.push(`/income/add`)}>Add </Button>
+        <Button variant="outline" onClick={() => router.push(`/income/add`)}>Add</Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

@@ -2,21 +2,21 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
-import { incomeOptions, expensesOptions } from '@/lib/utils';
+import { customerTypeOptions } from '@/lib/utils';
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DynamicDataTable } from "@/components/data-table"
-import { categories } from "@/lib/utils"
 import * as React from 'react';
 import { useEffect, useState } from "react"
-import { fetchIncomes} from '@/lib/spring-boot/api'
+import { fetchCustomers, fetchIncomes} from '@/lib/spring-boot/api'
 import { Badge } from "@/components/ui/badge" 
+import Link from "next/link";
 
 
-const getProgramLabel = (program: string): string => {
-  const options = incomeOptions ;
-  const option = options.find((option) => option.key === program);
-  return option ? option.label : program; 
+const getCustomerTypeLabel = (type: string): string => {
+  const options = customerTypeOptions ;
+  const option = options.find((option) => option.key === type);
+  return option ? option.label : type; 
 };
 
 const badgeStyles: Record<string, string> = {
@@ -25,7 +25,7 @@ const badgeStyles: Record<string, string> = {
   failed: "bg-red-100 text-red-800",
 }
 
-export const columns: ColumnDef<Income>[] = [
+export const columns: ColumnDef<Customers>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -49,17 +49,34 @@ export const columns: ColumnDef<Income>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "incomePrefix",
+    accessorKey: "customerType",
+    header: "Customer Type",
+    cell: ({ row }: { row: any })  => {
+      const rawValue = row.getValue("customerType") as string;
+      const displayValue = getCustomerTypeLabel(rawValue); 
+      return <div className="text-left">{displayValue}</div>;
+    },
+  },
+  {
+    accessorKey: "displayName",
     header: ({ column }: { column: any }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Income No
+          Customer Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
+    },
+    cell: ({ row }: { row: any }) => {
+      const customerId = row.original.id; 
+      return (
+        <Link href={`/customer/${customerId}`} className="text-blue-600 hover:underline">
+          {row.getValue("displayName")}
+        </Link>
+      );
     },
   },
   {
@@ -99,60 +116,54 @@ export const columns: ColumnDef<Income>[] = [
     },
   },  
   {
-    accessorKey: "name",
+    accessorKey: "email",
     header: ({ column }: { column: any }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Email
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }: { row: any }) => <div className="lowercase text-left">{row.getValue("name")}</div>,
+    cell: ({ row }: { row: any }) => <div className="text-left">{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "frequency",
-    header: "Frequency",
-    cell: ({ row }: { row: any }) => {
-      const frequency = row.getValue("frequency") as string;
-      const style = badgeStyles[frequency] || "bg-gray-100 text-gray-800"; // Default style
-
+    accessorKey: "email",
+    header: ({ column }: { column: any }) => {
       return (
-        <Badge className={`capitalize ${style}`}>
-          {frequency}
-        </Badge>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown />
+        </Button>
       );
-    }
+    },
+    cell: ({ row }: { row: any }) => <div className="text-left">{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-left">Amount</div>,
-    cell: ({ row }: { row: any }) => {
-      const amount = parseFloat(row.getValue("amount"))
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "MYR",
-      }).format(amount)
-
-      return <div className="font-semibold text-[#f00438] text-left ">{formatted}</div>;
+    accessorKey: "mobileNo",
+    header: ({ column }: { column: any }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Mobile No
+          <ArrowUpDown />
+        </Button>
+      );
     },
-  },
-  {
-    accessorKey: "program",
-    header: "Program",
-    cell: ({ row }: { row: any })  => {
-      const rawValue = row.getValue("program") as string;
-      const displayValue = getProgramLabel(rawValue); 
-      return <div className="lowercase text-left">{displayValue}</div>;
-    },
+    cell: ({ row }: { row: any }) => <div className="text-left">{row.getValue("mobileNo")}</div>,
   },
 ]
 
-export function IncomeDataTable() {
-  const [incomeData, setIncomeData] = useState<Income[]>([])
+export function CustomerDataTable() {
+  const [customerData, setCustomerData] = useState<Customers[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -160,10 +171,10 @@ export function IncomeDataTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchIncomes()
-        setIncomeData(data)
+        const data = await fetchCustomers()
+        setCustomerData(data)
       } catch (err) {
-        setError('Failed to fetch income data')
+        setError('Failed to fetch customer data')
       } finally {
         setLoading(false)
       }
@@ -172,19 +183,18 @@ export function IncomeDataTable() {
     fetchData()
   }, [])
 
-  const handleAddIncome = (newIncome: Income) => {
-    setIncomeData([...incomeData, newIncome])
+  const handleAddCustomer = (newCustomer: Customers) => {
+    setCustomerData([...customerData, newCustomer])
   }
 
   return (
     <div>
       <DynamicDataTable 
         columns={columns} 
-        data={incomeData} 
+        data={customerData} 
         filterColumn="source"
-        linkColumn="incomeNo"
-        linkPrefix="/income"
-        categoryOptions={categories as unknown as { value: string; label: string }[]}
+        linkColumn=""
+        linkPrefix="/customer"
         />
     </div>
   )

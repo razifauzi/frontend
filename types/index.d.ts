@@ -99,7 +99,7 @@ declare type AccountTypes =
   | "investment"
   | "other";
 
-declare type Category = "Food and Drink" | "Travel" | "Transfer";
+//declare type Category = "Food and Drink" | "Travel" | "Transfer";
 
 declare type CategoryCount = {
   name: string;
@@ -334,16 +334,15 @@ declare interface Params {
 }
 
 declare interface Income {
-  id: string;
-  name: string;
-  amount: string;
-  description: string;
-  frequency: string;
-  program: string;
-  fileName: string,
-  //incomePrefix: string,
-  // date: string | null;     
-  //createdts: string | null; 
+  id: string
+  name: string
+  amount: number
+  frequency: number
+  category: '1' | '2' | '3' | '4' 
+  fileName: string
+  receivedts: Date
+  description?: string
+  paymentMethod: '1' | '2' | '3' | '4'
 }
 
 declare interface Expenses {
@@ -352,32 +351,25 @@ declare interface Expenses {
   amount: string;
   description: string;
   frequency: string;
+  issuedts: Date
   program: string;
   fileName?: string,
-  // date: string | null;     
-  //createdts: string | null; 
 }
 
 declare interface Customers {
   id: string;
-  name: string;
-  amount: string;
-  remarks: string;
-  frequency: string;
-  salutation: string;
-  fileName?: string,
+  salutation?: string;
   customerType: string;
-  firstName: string;
-  lastName: string;
-  companyName: string;
+  firstName?: string;
+  lastName?: string;
+  companyName?: string;
   displayName: string;
-  email: string,
+  email?: string,
   mobileNo: string;
-  website: string;
-  billingAddress: string;
-  shippingAddress: string;
-  // date: string | null;     
-  //createdts: string | null; 
+  website?: string;
+  billingAddress?: string;
+  shippingAddress?: string;
+  remarks: string;
 }
 
 declare interface Vendors {
@@ -388,8 +380,6 @@ declare interface Vendors {
   frequency: string;
   program: string;
   fileName?: string,
-  // date: string | null;     
-  //createdts: string | null; 
 }
 
 declare interface StatCardProps {
@@ -405,3 +395,4 @@ declare type BrowserData = {
   fill: string;
   percentage: number;
 }
+

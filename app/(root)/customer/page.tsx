@@ -1,19 +1,13 @@
-import { DataTable } from '@/components/DataTable'
 import HeaderBox from '@/components/HeaderBox'
-import React from 'react'
+import { CustomerDataTable } from "@/components/customer/customer-data-table"
+import { Toaster } from "@/components/ui/toaster"
 
-const TransactionHistory = () => {
+export default function CustomerPage() {
   return (
-    <div className='transactions'>
-      <div className="transactions-header">
+    <div className="container mx-auto py-10">
         <HeaderBox title='Customer Listing' subtext='See your customer details'/>
-      </div>
-      <section className='flex w-full flex-col gap-6'>
-        {/* Pass 'incomes' as the type */}
-        <DataTable type="customer" />
-      </section>
+        <CustomerDataTable />
+      <Toaster />
     </div>
   )
 }
-
-export default TransactionHistory;
