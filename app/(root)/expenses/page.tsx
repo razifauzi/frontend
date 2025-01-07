@@ -1,18 +1,13 @@
-import { DataTable } from '@/components/DataTable'
 import HeaderBox from '@/components/HeaderBox'
-import React from 'react'
+import { ExpensesDataTable } from "@/components/expenses/expenses-data-table"
+import { Toaster } from "@/components/ui/toaster"
 
-const TransactionHistory = () => {
+export default function ExpensesPage() {
   return (
-    <div className='transactions'>
-      <div className="transactions-header">
+    <div className="container mx-auto py-10">
         <HeaderBox title='Expenses Listing' subtext='See your expenses details'/>
-      </div>
-      <section className='flex w-full flex-col gap-6'>
-        <DataTable type='expenses'/>
-      </section>
+        <ExpensesDataTable />
+      <Toaster />
     </div>
   )
 }
-
-export default TransactionHistory

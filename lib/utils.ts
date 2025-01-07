@@ -176,7 +176,7 @@ export const incomeSchema = z.object({
 })
 
 export const expensesSchema = z.object({
-  name: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  name: z.string().min(2, { message: 'Expenses source must be at least 2 characters.' }),
   amount:  z.preprocess(
     (value) => (typeof value === 'string' ? parseFloat(value) : value),
     z.number().positive({ message: 'Amount must be a positive number.' })
@@ -185,28 +185,32 @@ export const expensesSchema = z.object({
     (value) => (typeof value === 'string' ? parseFloat(value) : value),
     z.number().positive({ message: 'Amount must be a positive number.' })
   ),
-  receivedts: z.date().optional(),
+  issuedts: z.date().optional(),
   description: z.string().max(500, { message: 'Description must not exceed 500 characters.' }).optional(),
   paymentMethod: z.enum(['1', '2', '3', '4']),
   category: z.enum(['1', '2', '3', '4']),
-  fileName: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
+  fileName: z.string().min(2, { message: 'Expenses source must be at least 2 characters.' }),
   //fileName: z.instanceof(File).optional(),
 })
 
 export const customerSchema = z.object({
-  name: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
-  amount:  z.preprocess(
-    (value) => (typeof value === 'string' ? parseFloat(value) : value),
-    z.number().positive({ message: 'Amount must be a positive number.' })
-  ),
-  frequency:  z.preprocess(
-    (value) => (typeof value === 'string' ? parseFloat(value) : value),
-    z.number().positive({ message: 'Amount must be a positive number.' })
-  ),
+  firstName: z.string().min(2, { message: 'First name must be at least 2 characters.' }),
+  lastName: z.string().min(2, { message: 'Last name must be at least 2 characters.' }),
+  companyName: z.string().min(2, { message: 'Company Name must be at least 2 characters.' }),
+  displayName: z.string().min(2, { message: 'Display Name must be at least 2 characters.' }),
+  email: z.string().min(2, { message: 'Please insert a correct email format' }),
+  mobileNo: z.string().min(2, { message: 'Please insert a correct mobile No format' }),
+  customerType: z.enum(['1', '2', '3']),
+  billingAddress: z.string().min(2, { message: 'Billing Address must be at least 2 characters.' }),
+  shippingAddress: z.string().min(2, { message: 'Shipping Address must be at least 2 characters.' }),
   receivedts: z.date().optional(),
+  remarks: z.string().max(500, { message: 'Remarks must not exceed 500 characters.' }).optional(),
+  website: z.string().min(2, { message: 'Website must be at least 2 characters.' }),
+})
+
+export const vendorSchema = z.object({
+  name: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
   description: z.string().max(500, { message: 'Description must not exceed 500 characters.' }).optional(),
-  paymentMethod: z.enum(['1', '2', '3', '4']),
-  category: z.enum(['1', '2', '3', '4']),
   fileName: z.string().min(2, { message: 'Income source must be at least 2 characters.' }),
   //fileName: z.instanceof(File).optional(),
 })

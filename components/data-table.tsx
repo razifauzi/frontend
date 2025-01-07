@@ -42,6 +42,7 @@ interface DynamicDataTableProps<TData, TValue> {
   filterColumn?: string
   linkColumn?: string
   linkPrefix?: string
+  dynamicPath?: string
 }
 
 export function DynamicDataTable<TData extends { id: string }, TValue>({
@@ -50,6 +51,7 @@ export function DynamicDataTable<TData extends { id: string }, TValue>({
   filterColumn,
   linkColumn,
   linkPrefix,
+  dynamicPath
 }: DynamicDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -106,7 +108,7 @@ export function DynamicDataTable<TData extends { id: string }, TValue>({
                   }
                   className="max-w-sm"
                 />
-        <Button variant="outline" onClick={() => router.push(`/income/add`)}>Add</Button>
+        <Button variant="outline" onClick={() => router.push(`/${dynamicPath}/add`)}>Add</Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

@@ -346,14 +346,15 @@ declare interface Income {
 }
 
 declare interface Expenses {
-  id: string;
-  name: string;
-  amount: string;
-  description: string;
-  frequency: string;
+  id: string
+  name: string
+  amount: string
+  frequency: string
+  category: '1' | '2' | '3' | '4' 
+  fileName?: string
   issuedts: Date
-  program: string;
-  fileName?: string,
+  description: string
+  paymentMethod: '1' | '2' | '3' | '4'
 }
 
 declare interface Customers {
@@ -375,10 +376,7 @@ declare interface Customers {
 declare interface Vendors {
   id: string;
   name: string;
-  amount: string;
   description: string;
-  frequency: string;
-  program: string;
   fileName?: string,
 }
 

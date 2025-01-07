@@ -195,6 +195,7 @@ export function CustomerDataTable() {
         filterColumn="source"
         linkColumn=""
         linkPrefix="/customer"
+        dynamicPath="customer"
         />
     </div>
   )

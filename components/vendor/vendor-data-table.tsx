@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DynamicDataTable } from "@/components/data-table"
 import * as React from 'react';
 import { useEffect, useState } from "react"
-import { fetchIncomes} from '@/lib/spring-boot/api'
+import { fetchIncomes, fetchVendors} from '@/lib/spring-boot/api'
 import { Badge } from "@/components/ui/badge" 
 import Link from "next/link";
 
@@ -25,7 +25,7 @@ const badgeStyles: Record<string, string> = {
   failed: "bg-red-100 text-red-800",
 }
 
-export const columns: ColumnDef<Income>[] = [
+export const columns: ColumnDef<Vendors>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -47,28 +47,6 @@ export const columns: ColumnDef<Income>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  },
-  {
-    accessorKey: "incomePrefix",
-    header: ({ column }: { column: any }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Income No
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }: { row: any }) => {
-      const incomeId = row.original.id; // Ensure `id` field is available
-      return (
-        <Link href={`/income/${incomeId}`} className="text-blue-600 hover:underline">
-          {row.getValue("incomePrefix")}
-        </Link>
-      );
-    },
   },
   {
     accessorKey: "createdts",
@@ -114,64 +92,28 @@ export const columns: ColumnDef<Income>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+         Vendors Name
           <ArrowUpDown />
         </Button>
       );
     },
     cell: ({ row }: { row: any }) => <div className="lowercase text-left">{row.getValue("name")}</div>,
   },
-  {
-    accessorKey: "frequency",
-    header: "Frequency",
-    cell: ({ row }: { row: any }) => {
-      const frequency = row.getValue("frequency") as string;
-      const style = badgeStyles[frequency] || "bg-gray-100 text-gray-800"; // Default style
-
-      return (
-        <Badge className={`capitalize ${style}`}>
-          {frequency}
-        </Badge>
-      );
-    }
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-left">Amount</div>,
-    cell: ({ row }: { row: any }) => {
-      const amount = parseFloat(row.getValue("amount"))
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "MYR",
-      }).format(amount)
-
-      return <div className="font-semibold text-[#f00438] text-left ">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "category",
-    header: "Category",
-    cell: ({ row }: { row: any })  => {
-      const rawValue = row.getValue("category") as string;
-      const displayValue = getProgramLabel(rawValue); 
-      return <div className="text-left">{displayValue}</div>;
-    },
-  },
 ]
 
-export function IncomeDataTable() {
-  const [incomeData, setIncomeData] = useState<Income[]>([])
+export function VendorDataTable() {
+  const [vendorData, setVendorData] = useState<Vendors[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Fetch the income data when the component mounts
+  // Fetch the vendor data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchIncomes()
-        setIncomeData(data)
+        const data = await fetchVendors()
+        setVendorData(data)
       } catch (err) {
-        setError('Failed to fetch income data')
+        setError('Failed to fetch vendor data')
       } finally {
         setLoading(false)
       }
@@ -180,19 +122,19 @@ export function IncomeDataTable() {
     fetchData()
   }, [])
 
-  const handleAddIncome = (newIncome: Income) => {
-    setIncomeData([...incomeData, newIncome])
+  const handleAddIncome = (newVendor: Vendors) => {
+    setVendorData([...vendorData, newVendor])
   }
 
   return (
     <div>
       <DynamicDataTable 
         columns={columns} 
-        data={incomeData} 
+        data={vendorData} 
         filterColumn="source"
-        linkColumn="incomeNo"
-        linkPrefix="/income"
-        dynamicPath="income"
+        linkColumn=""
+        linkPrefix="/vendor"
+        dynamicPath="vendor"
         />
     </div>
   )

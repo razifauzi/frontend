@@ -2,21 +2,21 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
-import { incomeOptions, expensesOptions } from '@/lib/utils';
+import { expensesOptions } from '@/lib/utils';
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DynamicDataTable } from "@/components/data-table"
 import * as React from 'react';
 import { useEffect, useState } from "react"
-import { fetchIncomes} from '@/lib/spring-boot/api'
+import { fetchExpenses} from '@/lib/spring-boot/api'
 import { Badge } from "@/components/ui/badge" 
 import Link from "next/link";
 
 
-const getProgramLabel = (program: string): string => {
-  const options = incomeOptions ;
-  const option = options.find((option) => option.key === program);
-  return option ? option.label : program; 
+const getCategoryLabel = (category: string): string => {
+  const options = expensesOptions ;
+  const option = options.find((option) => option.key === category);
+  return option ? option.label : category; 
 };
 
 const badgeStyles: Record<string, string> = {
@@ -25,7 +25,7 @@ const badgeStyles: Record<string, string> = {
   failed: "bg-red-100 text-red-800",
 }
 
-export const columns: ColumnDef<Income>[] = [
+export const columns: ColumnDef<Expenses>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -49,23 +49,23 @@ export const columns: ColumnDef<Income>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "incomePrefix",
+    accessorKey: "expensesPrefix",
     header: ({ column }: { column: any }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Income No
+          Expenses No
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }: { row: any }) => {
-      const incomeId = row.original.id; // Ensure `id` field is available
+      const expensesId = row.original.id; 
       return (
-        <Link href={`/income/${incomeId}`} className="text-blue-600 hover:underline">
-          {row.getValue("incomePrefix")}
+        <Link href={`/expenses/${expensesId}`} className="text-blue-600 hover:underline">
+          {row.getValue("expensesPrefix")}
         </Link>
       );
     },
@@ -144,7 +144,6 @@ export const columns: ColumnDef<Income>[] = [
         style: "currency",
         currency: "MYR",
       }).format(amount)
-
       return <div className="font-semibold text-[#f00438] text-left ">{formatted}</div>;
     },
   },
@@ -153,14 +152,14 @@ export const columns: ColumnDef<Income>[] = [
     header: "Category",
     cell: ({ row }: { row: any })  => {
       const rawValue = row.getValue("category") as string;
-      const displayValue = getProgramLabel(rawValue); 
+      const displayValue = getCategoryLabel(rawValue); 
       return <div className="text-left">{displayValue}</div>;
     },
   },
 ]
 
-export function IncomeDataTable() {
-  const [incomeData, setIncomeData] = useState<Income[]>([])
+export function ExpensesDataTable() {
+  const [expensesData, setExpensesData] = useState<Expenses[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -168,10 +167,10 @@ export function IncomeDataTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchIncomes()
-        setIncomeData(data)
+        const data = await fetchExpenses()
+        setExpensesData(data)
       } catch (err) {
-        setError('Failed to fetch income data')
+        setError('Failed to fetch expenses data')
       } finally {
         setLoading(false)
       }
@@ -180,19 +179,19 @@ export function IncomeDataTable() {
     fetchData()
   }, [])
 
-  const handleAddIncome = (newIncome: Income) => {
-    setIncomeData([...incomeData, newIncome])
+  const handleAddExpenses = (newExpenses: Expenses) => {
+    setExpensesData([...expensesData, newExpenses])
   }
 
   return (
     <div>
       <DynamicDataTable 
         columns={columns} 
-        data={incomeData} 
+        data={expensesData} 
         filterColumn="source"
-        linkColumn="incomeNo"
-        linkPrefix="/income"
-        dynamicPath="income"
+        linkColumn="expensesNo"
+        linkPrefix="/expenses"
+        dynamicPath="expenses"
         />
     </div>
   )

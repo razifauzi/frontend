@@ -10,7 +10,7 @@ function convertDates(income: any): Income {
   }
 }
 
-function converExepnsestDates(expenses: any): Expenses {
+function convertExepnsestDates(expenses: any): Expenses {
   return {
     ...expenses,
     issuedts: new Date(expenses.issuedts),
@@ -83,34 +83,52 @@ export async function deleteIncome(id: string): Promise<void> {
 }
 
 // Fetch all expenses
-export const fetchExpenses= async (): Promise<Expenses[]> => {
-  return fetchData<Expenses[]>("/api/v1/expenses");
-};
+export async function fetchExpenses(): Promise<Expenses[]> {
+  try {
+    const expenses = await fetchData<Expenses[]>('/api/v1/expenses');
+    return expenses.map(convertExepnsestDates);
+  } catch (error) {
+    console.error('Error fetching expenses:', error);
+    throw new Error('Failed to fetch expenses');
+  }
+}
 
 // Fetch a single Expenses by ID
 export async function fetchExpensesById(id: string): Promise<Expenses> {
   const expenses = await fetchData<Expenses>(`/api/v1/expenses/${id}`);
-  return converExepnsestDates(expenses);
+  return convertExepnsestDates(expenses);
 }
 
-
 // Create a new Expenses
-export const createExpenses= async (expenses: Expenses): Promise<Expenses> => {
-  return fetchData<Expenses>("/api/v1/expenses", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(expenses),
+export async function createExpenses(expenses: Omit<Expenses, 'id'>): Promise<Expenses> {
+  const newExpenses = await fetchData<Expenses>('/api/v1/expenses', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ...expenses,
+      receivedts: expenses.issuedts.toISOString(),
+    }),
   });
-};
+  return convertExepnsestDates(newExpenses);
+}
 
 // Update a Expenses
-export const updateExpenses= async (id: string, expenses: Expenses): Promise<Expenses> => {
-  return fetchData<Expenses>(`/api/v1/expenses/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(expenses),
+export async function updateExpenses(id: string, expenses: Partial<Expenses>): Promise<Expenses> {
+  const updatedExpenses = await fetchData<Expenses>(`/api/v1/expenses/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ...expenses,
+      receivedts: expenses.issuedts?.toISOString(),
+    }),
   });
+  return convertExepnsestDates(updatedExpenses);
 };
+
 
 // Delete a Expenses
 export const deleteExpenses = async (id: string): Promise<void> => {
