@@ -33,13 +33,6 @@ const incomeFields: FieldConfig[] = [
     description: 'When did you receive this income?',
   },
   {
-    name: 'description',
-    label: 'Description',
-    type: 'textarea',
-    placeholder: 'Add any additional details about this income',
-    description: 'Optional: Provide more details about this income.',
-  },
-  {
     name: 'paymentMethod',
     label: 'Payment Method',
     type: 'select',
@@ -68,9 +61,16 @@ const incomeFields: FieldConfig[] = [
     placeholder: 'e.g. Salary, Freelance, Investments',
     description: 'Enter the source of your income.',
   },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    placeholder: 'Add any additional details about this income',
+    description: 'Optional: Provide more details about this income.',
+  },
   // {
   //   name: 'fileName',
-  //   label: 'Attachment',q  
+  //   label: 'Attachment', 
   //   type: 'file',
   //   accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
   //   description: 'Upload any relevant documents (e.g., pay stub, invoice)',

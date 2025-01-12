@@ -17,6 +17,14 @@ function convertExepnsestDates(expenses: any): Expenses {
   }
 }
 
+function convertCustomerDates(customer: any): Customers {
+  return {
+    ...customer,
+    createdts: new Date(customer.createdts),
+  }
+}
+
+
 export const fetchData = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
   const url = `${API_BASE_URL}${endpoint}`;
   const response = await fetch(url, options);
@@ -137,9 +145,17 @@ export const deleteExpenses = async (id: string): Promise<void> => {
 
 
 // Fetch all customer
-export const fetchCustomers= async (): Promise<Customers[]> => {
-  return fetchData<Customers[]>("/api/v1/customer");
-};
+// Make sure the customer date fields are properly converted to Date objects
+export async function fetchCustomers(): Promise<Customers[]> {
+  try {
+    const customers = await fetchData<Customers[]>('/api/v1/customer');
+    return customers.map(convertCustomerDates);
+  } catch (error) {
+    console.error('Error fetching customers:', error);
+    throw new Error('Failed to fetch customers');
+  }
+}
+
 
 // Fetch a single Customer by ID
 export const fetchCustomerById = async (id: string): Promise<Customers> => {
@@ -201,3 +217,11 @@ export const updateVendor= async (id: string, vendor: Vendors): Promise<Vendors>
 export const deleteVendor = async (id: string): Promise<void> => {
   await fetchData<void>(`/api/v1/vendor/${id}`, { method: "DELETE" });
 };
+
+export async function fetchPaymentMethodData(): Promise<PaymentMethodData[]> {
+  const response = await fetch('http://localhost:8080/api/payment-methods');
+  if (!response.ok) {
+    throw new Error('Failed to fetch payment method data');
+  }
+  return response.json();
+}

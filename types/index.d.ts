@@ -348,7 +348,7 @@ declare interface Income {
 declare interface Expenses {
   id: string
   name: string
-  amount: string
+  amount: number
   frequency: string
   category: '1' | '2' | '3' | '4' 
   fileName?: string
@@ -371,6 +371,7 @@ declare interface Customers {
   billingAddress?: string;
   shippingAddress?: string;
   remarks: string;
+  createdts?: string | Date;  
 }
 
 declare interface Vendors {
@@ -384,13 +385,18 @@ declare interface StatCardProps {
   title: string
   value: string
   icon: LucideIcon
-  description: string
+  description: string | JSX.Element; 
 }
 
 declare type BrowserData = {
-  browser: string;
+  browser:  string;
   visitors: number;
   fill: string;
   percentage: number;
 }
 
+declare type PaymentMethodData = {
+  key: string;    
+  value: number;  
+  createdts: Date;
+};

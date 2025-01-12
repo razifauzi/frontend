@@ -322,5 +322,35 @@ export const paymentMethodOptions = [
   { key: "2", label: "Check" },
   { key: "3", label: "Cash" },
   { key: "4", label: "Other" },
-
+  { key: "5", label: "QR" },
 ];
+
+export const paymentMethodData = [
+  { key: "1", label: "Direct Deposit", value: 450, fill: "hsl(var(--chart-1))" },
+  { key: "2", label: "Check", value: 200, fill: "hsl(var(--chart-2))" },
+  { key: "3", label: "Cash", value: 150, fill: "hsl(var(--chart-3))" },
+  { key: "4", label: "Other", value: 100, fill: "hsl(var(--chart-4))" },
+];
+
+const BASE_COLORS = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+];
+
+export function generateColors(count: number): string[] {
+  const colors = [...BASE_COLORS];
+  if (count <= BASE_COLORS.length) {
+    return colors.slice(0, count);
+  }
+
+  // Generate additional colors if needed
+  for (let i = BASE_COLORS.length; i < count; i++) {
+    const hue = (i * 137.508) % 360; // Use golden angle approximation for distribution
+    colors.push(`hsl(${hue}, 70%, 50%)`);
+  }
+
+  return colors;
+}
