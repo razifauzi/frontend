@@ -188,7 +188,7 @@ export function ExpensesDataTable() {
       <DynamicDataTable 
         columns={columns} 
         data={expensesData} 
-        filterColumn="source"
+        // filterColumn="source"
         linkColumn="expensesNo"
         linkPrefix="/expenses"
         dynamicPath="expenses"

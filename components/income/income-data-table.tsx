@@ -189,11 +189,11 @@ export function IncomeDataTable() {
       <DynamicDataTable 
         columns={columns} 
         data={incomeData} 
-        filterColumn="source"
-        linkColumn="incomeNo"
+        linkColumn="incomePrefix"  // Ensure this matches the column id
         linkPrefix="/income"
         dynamicPath="income"
-        />
+        // filterColumn="category"  // Set the filter column here
+      />
     </div>
   )
 }

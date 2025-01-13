@@ -192,7 +192,7 @@ export function CustomerDataTable() {
       <DynamicDataTable 
         columns={columns} 
         data={customerData} 
-        filterColumn="source"
+        // filterColumn="source"
         linkColumn=""
         linkPrefix="/customer"
         dynamicPath="customer"

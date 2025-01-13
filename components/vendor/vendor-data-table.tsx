@@ -131,7 +131,7 @@ export function VendorDataTable() {
       <DynamicDataTable 
         columns={columns} 
         data={vendorData} 
-        filterColumn="source"
+        // filterColumn="source"
         linkColumn=""
         linkPrefix="/vendor"
         dynamicPath="vendor"
